@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/app_theme.dart';
@@ -28,56 +29,64 @@ class NeuInsightCard extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = width ?? ((screenWidth - 48) / 2); // Two columns by default
 
-    Widget cardContent = Container(
-      width: cardWidth,
-      height: 140,
-      padding: const EdgeInsets.all(16),
-      decoration:
-          AppTheme.neuDecoration(radius: 20, color: AppTheme.frameColor),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
+    Widget cardContent = ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          width: cardWidth,
+          height: 140,
+          padding: const EdgeInsets.all(16),
+          decoration: AppTheme.glassDecoration(
+            radius: 20,
+            color: Colors.white.withOpacity(0.08),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: accentColor, size: 24),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    color: AppTheme.textDark.withOpacity(0.6),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+              Row(
+                children: [
+                  Icon(icon, color: accentColor, size: 24),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        color: AppTheme.textDark.withOpacity(0.6),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                ],
+              ),
+              const Spacer(),
+              Text(
+                value,
+                style: GoogleFonts.poppins(
+                  color: AppTheme.textDark,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
+              if (subtitle != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  subtitle!,
+                  style: GoogleFonts.inter(
+                    color: AppTheme.textDark.withOpacity(0.5),
+                    fontSize: 12,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
           ),
-          const Spacer(),
-          Text(
-            value,
-            style: GoogleFonts.poppins(
-              color: AppTheme.textDark,
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              subtitle!,
-              style: GoogleFonts.inter(
-                color: AppTheme.textDark.withOpacity(0.5),
-                fontSize: 12,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ],
+        ),
       ),
     );
 

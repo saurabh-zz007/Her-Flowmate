@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+enum FlowIntensity { light, medium, heavy }
+
 @HiveType(typeId: 0)
 class PeriodLog extends HiveObject {
   @HiveField(0)
@@ -17,12 +19,16 @@ class PeriodLog extends HiveObject {
   @HiveField(4)
   final String? mood;
 
+  @HiveField(5)
+  final DateTime? endDate;
+
   PeriodLog({
     required this.startDate,
     required this.duration,
     this.flowIntensity,
     this.symptoms,
     this.mood,
+    this.endDate,
   });
 }
 
@@ -43,13 +49,14 @@ class PeriodLogAdapter extends TypeAdapter<PeriodLog> {
       flowIntensity: fields[2] as String?,
       symptoms: (fields[3] as List?)?.cast<String>(),
       mood: fields[4] as String?,
+      endDate: fields[5] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PeriodLog obj) {
     writer
-      ..writeByte(5) // Updated count
+      ..writeByte(6) // Updated count
       ..writeByte(0)
       ..write(obj.startDate)
       ..writeByte(1)
@@ -59,7 +66,9 @@ class PeriodLogAdapter extends TypeAdapter<PeriodLog> {
       ..writeByte(3)
       ..write(obj.symptoms)
       ..writeByte(4)
-      ..write(obj.mood);
+      ..write(obj.mood)
+      ..writeByte(5)
+      ..write(obj.endDate);
   }
 
   @override

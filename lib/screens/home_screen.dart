@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -221,44 +222,50 @@ class _PhaseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap ?? () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => PhaseDetailsScreen(phaseName: phaseName))),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: AppTheme.neuDecoration(radius: 32, color: AppTheme.frameColor),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
-                  shape: BoxShape.circle),
-              child: Icon(icon, color: color, size: 36),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: AppTheme.glassDecoration(radius: 32, color: Colors.white.withOpacity(0.08)),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      color: color.withOpacity(0.15),
+                      shape: BoxShape.circle),
+                  child: Icon(icon, color: color, size: 36),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(isSecondary ? 'Status' : 'Current Phase',
+                          style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textDark.withOpacity(0.5))),
+                      const SizedBox(height: 2),
+                      Text(phaseName,
+                          style: GoogleFonts.poppins(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w800,
+                              color: AppTheme.textDark)),
+                      Text(subtitle,
+                          style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: color,
+                              fontWeight: FontWeight.w600)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: AppTheme.shadowDark, size: 28),
+              ],
             ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(isSecondary ? 'Status' : 'Current Phase',
-                      style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textDark.withOpacity(0.5))),
-                  const SizedBox(height: 2),
-                  Text(phaseName,
-                      style: GoogleFonts.poppins(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: AppTheme.textDark)),
-                  Text(subtitle,
-                      style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: color,
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right_rounded, color: AppTheme.shadowDark, size: 28),
-          ],
+          ),
         ),
       ),
     );
@@ -278,30 +285,34 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: AppTheme.neuDecoration(radius: 28, color: AppTheme.frameColor),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: AppTheme.accentPink, size: 22),
-            const SizedBox(height: 16),
-            Text(label,
-                style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textDark.withOpacity(0.5))),
-            const SizedBox(height: 4),
-            Text(value,
-                style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.textDark)),
-          ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: AppTheme.glassDecoration(radius: 28, color: Colors.white.withOpacity(0.05)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, color: AppTheme.accentPink, size: 22),
+                const SizedBox(height: 16),
+                Text(label,
+                    style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textDark.withOpacity(0.5))),
+                const SizedBox(height: 4),
+                Text(value,
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.textDark)),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
-
-// Removed _DetailScreenStub as it is no longer used.

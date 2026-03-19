@@ -1,46 +1,31 @@
-# Her-Flowmate
+# HerFlowmate 🍑✨
 
-Her-Flowmate is a beautifully designed, privacy-focused menstrual cycle tracking app built with Flutter.
+A premium, minimalist, and privacy-first period tracker designed to empower women with deep biological insights and calm aesthetics.
 
-## Features
-- **Log Periods**: Easily log the start date and duration of your periods.
-- **Phase Prediction**: Displays your current cycle phase (Menstrual, Follicular, Ovulation, Luteal) in a beautiful circular progress indicator.
-- **Next Period Prediction**: Calculates your average cycle length to accurately predict when your next period will arrive.
-- **Fertile Window Calculation**: Identifies your fertile window (5 days around ovulation) to help you understand your body.
-- **Calendar View**: A clean calendar interface with markers indicating past periods (red) and predicted fertile windows (purple).
-- **Privacy First**: All data is stored locally on your device using Hive. No data is sent to the cloud.
+![Flutter](https://img.shields.io/badge/Flutter-v3.11+-02569B?logo=flutter)
+![Hive](https://img.shields.io/badge/Database-Hive-yellow)
+![Privacy](https://img.shields.io/badge/Privacy-On--Device-brightgreen)
 
-## Tech Stack
-- **Framework**: Flutter (Android & iOS)
-- **Local Storage**: Hive (`hive`, `hive_flutter`)
-- **State Management**: Provider
-- **UI Components**: `table_calendar`, `intl`
+## ✨ Features
+- **Minimalist Dashboard**: Only the essentials at a glance.
+- **Cycle Evolution Wheel**: Interactive visualization of your current phase.
+- **Symptom & Mood Tracking**: Enriched logs for better health patterns.
+- **Deep Insights**: Biological explanations and self-care tips for every phase.
+- **Privacy-First**: No data leaves your device. No accounts required.
 
-## Setup Instructions
+## 🚀 Roadmap
+- [ ] **Local Notifications**: Reminders for upcoming periods.
+- [ ] **Data Export**: PDF reports for doctor consultations.
+- [ ] **Cycle Irregularity Alerts**: Smart detection of cycle variance.
+- [ ] **Glassmorphic Overhaul**: Complete premium UI skinning.
 
-1. **Install Flutter**: Make sure you have the Flutter SDK installed on your machine.
-2. **Clone the repository**:
-   ```bash
-   git clone <your-repo-url>
-   cd Her-Flowmate
-   ```
-3. **Install Dependencies**:
-   ```bash
-   flutter pub get
-   ```
-4. **Generate Hive Code** (Required only if modifying `PeriodLog` model):
-   ```bash
-   flutter pub run build_runner build --delete-conflicting-outputs
-   ```
-5. **Run the App**:
-   ```bash
-   flutter run
-   ```
+## 🛠️ Installation
+1. Clone the repository.
+2. Run `flutter pub get`.
+3. Run `flutter run`.
 
-## Testing the Application
+## 🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-To test the cycle tracking and predictions manually:
-1. Launch the app and tap the `+` button in the center.
-2. **Log past periods**: Log a period for today, and then log a couple of periods from the past (e.g., 28 days ago, 56 days ago).
-3. **Verify Home Screen**: Observe the "Average Cycle" calculated and the days countdown to your next expected period. Also, check the phase progress circle.
-4. **Verify Calendar Screen**: Navigate to the calendar tab and verify that the red dots (periods) and purple dots (fertile windows) appear correctly on the timeline.
+---
+*HerFlowmate - Understand Your Own Rhythm.*

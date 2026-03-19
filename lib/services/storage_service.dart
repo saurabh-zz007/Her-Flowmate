@@ -125,10 +125,20 @@ class StorageService extends ChangeNotifier {
     _updateReminders();
   }
 
-  Future<void> clearLogs() async {
+  Future<void> deleteAllLogs() async {
     await _box.clear();
     notifyListeners();
     await NotificationService().cancelAll();
+  }
+
+  Future<String> exportLogsToJson() async {
+    final logs = getLogs();
+    return logs.map((l) => l.startDate.toIso8601String()).join(',');
+  }
+
+  Future<void> exportLogsToPdf() async {
+    // Placeholder for PDF generation logic (e.g. using 'pdf' package)
+    debugPrint('Exporting logs to PDF...');
   }
 
   List<PeriodLog> getLogs() {

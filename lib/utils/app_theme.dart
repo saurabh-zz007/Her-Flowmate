@@ -8,6 +8,14 @@ abstract final class AppTheme {
   static const Color shadowLight = Color(0xFFFFFFFF);
   static const Color textDark = Color(0xFF6B5E5E);
 
+  static BoxDecoration glassDecoration({double radius = 24.0, Color? color}) {
+    return BoxDecoration(
+      color: (color ?? Colors.white).withOpacity(0.4),
+      borderRadius: BorderRadius.circular(radius),
+      border: Border.all(color: Colors.white.withOpacity(0.35), width: 1.5),
+    );
+  }
+
   // Gradient background
   static const LinearGradient bgGradient = LinearGradient(
     begin: Alignment.topLeft,

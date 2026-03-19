@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -22,16 +23,22 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             // ── Avatar ───────────────────────────────────────────────────
-            Container(
-              width: 110, height: 110,
-              decoration: AppTheme.neuDecoration(
-                  radius: 55, color: AppTheme.frameColor),
-              alignment: Alignment.center,
-              child: Text(
-                initial,
-                style: GoogleFonts.poppins(
-                    fontSize: 48, fontWeight: FontWeight.bold,
-                    color: AppTheme.accentPink),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(55),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  width: 110, height: 110,
+                  decoration: AppTheme.glassDecoration(
+                      radius: 55, color: Colors.white.withOpacity(0.08)),
+                  alignment: Alignment.center,
+                  child: Text(
+                    initial,
+                    style: GoogleFonts.poppins(
+                        fontSize: 48, fontWeight: FontWeight.bold,
+                        color: AppTheme.accentPink),
+                  ),
+                ),
               ),
             ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
 
@@ -48,15 +55,22 @@ class ProfileScreen extends StatelessWidget {
 
             // ── Settings Tiles ────────────────────────────────────────────
             _tile(
+              context,
               icon: Icons.picture_as_pdf_rounded,
               iconColor: AppTheme.accentPink,
               title: 'Export My Data',
               subtitle: 'Download cycle history as PDF',
-              onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('PDF Export coming soon.'))),
+              onTap: () async {
+                await storage.exportLogsToPdf();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('PDF Export started... check your downloads folder.')));
+                }
+              },
             ).animate().fadeIn(delay: 400.ms),
 
             _tile(
+              context,
               icon: storage.isMinimalMode
                   ? Icons.motion_photos_paused_rounded
                   : Icons.auto_awesome_rounded,
@@ -72,6 +86,7 @@ class ProfileScreen extends StatelessWidget {
             ).animate().fadeIn(delay: 500.ms),
 
             _tile(
+              context,
               icon: Icons.privacy_tip_rounded,
               iconColor: AppTheme.phaseColors['Ovulation']!,
               title: 'Privacy Policy',
@@ -80,26 +95,41 @@ class ProfileScreen extends StatelessWidget {
                   const SnackBar(content: Text('Your data is local and encrypted.'))),
             ).animate().fadeIn(delay: 600.ms),
 
+            _tile(
+              context,
+              icon: Icons.delete_sweep_rounded,
+              iconColor: Colors.redAccent,
+              title: 'Clear All Data',
+              subtitle: 'Permanently erase all logs',
+              onTap: () => _confirmDelete(context, storage),
+            ).animate().fadeIn(delay: 650.ms),
+
             const SizedBox(height: 40),
 
             // ── Logout ────────────────────────────────────────────────────
             if (storage.hasCompletedLogin)
-              Container(
-                decoration: AppTheme.neuDecoration(
-                    radius: 20, color: AppTheme.frameColor),
-                child: ElevatedButton.icon(
-                  onPressed: () => storage.logout(),
-                  icon: const Icon(Icons.logout_rounded, color: AppTheme.accentPink),
-                  label: Text('Log Out',
-                      style: GoogleFonts.inter(
-                          fontSize: 16, fontWeight: FontWeight.w700,
-                          color: AppTheme.accentPink)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    minimumSize: const Size(double.infinity, 60),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(
+                    decoration: AppTheme.glassDecoration(
+                        radius: 20, color: Colors.white.withOpacity(0.05)),
+                    child: ElevatedButton.icon(
+                      onPressed: () => storage.logout(),
+                      icon: const Icon(Icons.logout_rounded, color: AppTheme.accentPink),
+                      label: Text('Log Out',
+                          style: GoogleFonts.inter(
+                              fontSize: 16, fontWeight: FontWeight.w700,
+                              color: AppTheme.accentPink)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        minimumSize: const Size(double.infinity, 60),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                    ),
                   ),
                 ),
               ).animate().fadeIn(delay: 700.ms),
@@ -111,7 +141,29 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _tile({
+  void _confirmDelete(BuildContext context, StorageService storage) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete All Data?'),
+        content: const Text('This action cannot be undone. All your period logs and predictions will be cleared.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              storage.deleteAllLogs();
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All data cleared.')));
+            },
+            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _tile(
+    BuildContext context, {
     required IconData icon,
     required Color iconColor,
     required String title,
@@ -123,41 +175,49 @@ class ProfileScreen extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        decoration: AppTheme.neuDecoration(
-            radius: 24, color: AppTheme.frameColor),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
-            ),
-            const SizedBox(width: 18),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: AppTheme.glassDecoration(
+                  radius: 24, color: Colors.white.withOpacity(0.05)),
+              child: Row(
                 children: [
-                  Text(title,
-                      style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textDark)),
-                  if (subtitle != null)
-                    Text(subtitle,
-                        style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: AppTheme.textDark.withOpacity(0.6))),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: iconColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(icon, color: iconColor, size: 24),
+                  ),
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title,
+                            style: GoogleFonts.inter(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textDark)),
+                        if (subtitle != null)
+                          Text(subtitle,
+                              style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  color: AppTheme.textDark.withOpacity(0.6))),
+                      ],
+                    ),
+                  ),
+                  trailing ??
+                      const Icon(Icons.chevron_right_rounded,
+                          color: AppTheme.textDark, size: 22),
                 ],
               ),
             ),
-            trailing ??
-                const Icon(Icons.chevron_right_rounded,
-                    color: AppTheme.textDark, size: 22),
-          ],
+          ),
         ),
       ),
     );

@@ -46,6 +46,34 @@ class PredictionService {
     return (totalDays / cycleCount).round();
   }
 
+  /// Variance check: if cycle length varies by more than 7 days, it's flagged as irregular.
+  bool get isIrregularCycle {
+    final logs = storageService.getLogs();
+    if (logs.length < 3) return false;
+
+    int minLen = 100, maxLen = 0;
+    for (int i = 0; i < logs.length - 1; i++) {
+        final len = logs[i].startDate.difference(logs[i+1].startDate).inDays;
+        if (len > 15 && len < 90) {
+            if (len < minLen) minLen = len;
+            if (len > maxLen) maxLen = len;
+        }
+    }
+    return (maxLen - minLen) > 7;
+  }
+
+  /// Calculates a simple health score (0-100) based on regularity and track usage.
+  int getHealthScore() {
+    final logs = storageService.getLogs();
+    if (logs.isEmpty) return 0;
+    
+    int score = 50; // Base score
+    if (!isIrregularCycle) score += 30;
+    if (logs.length >= 3) score += 20;
+    
+    return score.clamp(0, 100);
+  }
+
   DateTime? get currentPeriodStart {
     final logs = storageService.getLogs();
     if (logs.isEmpty) return null;

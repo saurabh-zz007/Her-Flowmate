@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -231,20 +230,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   Widget _buildBottomNav() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      height: 72,
-      decoration:
-          AppTheme.neuDecoration(radius: 36, color: AppTheme.frameColor),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _navItem(0, Icons.grid_view_rounded, 'Home'),
-          _navItem(1, Icons.analytics_rounded, 'Insights'),
-          const SizedBox(width: 48), // Space for FAB
-          _navItem(2, Icons.history_rounded, 'History'),
-          _navItem(3, Icons.person_rounded, 'Profile'),
-        ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(36),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+          height: 72,
+          decoration: AppTheme.glassDecoration(radius: 36, color: Colors.white.withOpacity(0.1)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _navItem(0, Icons.grid_view_rounded, 'Home'),
+              _navItem(1, Icons.analytics_rounded, 'Insights'),
+              const SizedBox(width: 48), // Space for FAB
+              _navItem(2, Icons.history_rounded, 'History'),
+              _navItem(3, Icons.person_rounded, 'Profile'),
+            ],
+          ),
+        ),
       ),
     );
   }
