@@ -487,11 +487,6 @@ class _GreetingSection extends StatelessWidget {
             ),
           ],
         ),
-        GlassContainer(
-          radius: 12,
-          padding: const EdgeInsets.all(8),
-          child: const Icon(Icons.notifications_none_rounded, color: AppTheme.textDark),
-        ),
       ],
     ).animate().fadeIn().slideX(begin: -0.05);
   }

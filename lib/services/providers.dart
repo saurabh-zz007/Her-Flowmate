@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as rf;
+import 'package:go_router/go_router.dart' as gr;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'storage_service.dart';
 import 'prediction_service.dart';
@@ -14,26 +14,26 @@ import '../screens/feedback_screen.dart';
 import '../screens/log_period_screen.dart';
 
 // Provider for SharedPreferences (initialized in main)
-final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+final sharedPreferencesProvider = rf.Provider<SharedPreferences>((ref) {
   throw UnimplementedError('Initialize this in main and override');
 });
 
 // Provider for StorageService
-final storageServiceProvider = ChangeNotifierProvider<StorageService>((ref) {
+final storageServiceProvider = rf.ChangeNotifierProvider<StorageService>((ref) {
   throw UnimplementedError('Initialize this in main and override');
 });
 
 // Provider for PredictionService
-final predictionServiceProvider = Provider<PredictionService>((ref) {
+final predictionServiceProvider = rf.Provider<PredictionService>((ref) {
   final storage = ref.watch(storageServiceProvider);
   return PredictionService(storage);
 });
 
 // Provider for GoRouter
-final routerProvider = Provider<GoRouter>((ref) {
+final routerProvider = rf.Provider<gr.GoRouter>((ref) {
   final storage = ref.watch(storageServiceProvider);
   
-  return GoRouter(
+  return gr.GoRouter(
     initialLocation: '/',
     refreshListenable: storage,
     redirect: (context, state) {
@@ -57,42 +57,42 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
+      gr.GoRoute(
         path: '/',
         builder: (context, state) => const WelcomeScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/welcome',
         builder: (context, state) => const WelcomeScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/home',
         builder: (context, state) => const MainNavigationScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/calendar',
         builder: (context, state) => const CalendarScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/log',
         pageBuilder: (context, state) => const MaterialPage(
           fullscreenDialog: true,
           child: LogPeriodScreen(),
         ),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/settings',
         builder: (context, state) => const ModeSettingsScreen(),
       ),
-      GoRoute(
+      gr.GoRoute(
         path: '/support',
         builder: (context, state) => const FeedbackScreen(),
       ),

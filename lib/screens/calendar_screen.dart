@@ -9,6 +9,7 @@ import '../services/prediction_service.dart';
 import '../utils/app_theme.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/delight_widgets.dart';
+import '../widgets/notification_widgets.dart';
 import 'prediction_details_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -63,15 +64,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           style: GoogleFonts.poppins(color: AppTheme.textDark, fontWeight: FontWeight.w800, fontSize: 20),
         ),
         centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: GlassContainer(
-              padding: const EdgeInsets.all(8),
-              radius: 12,
-              child: const Icon(Icons.notifications_none_rounded, color: AppTheme.textDark),
-            ),
-          ),
+        actions: const [
+          NotificationBell(),
+          SizedBox(width: 8),
         ],
       ),
       body: Container(
