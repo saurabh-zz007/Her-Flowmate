@@ -64,7 +64,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   Widget _logButton() {
-    return GestureDetector(
+    return NeuContainer(
       onTap: () {
         showModalBottomSheet(
           context: context,
@@ -73,16 +73,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           builder: (context) => _buildAddMenu(context),
         );
       },
-      child: NeuContainer(
-        width: 48,
-        height: 48,
-        radius: 24,
-        style: NeuStyle.convex,
-        child: const Icon(
-          Icons.add_rounded,
-          size: 28,
-          color: AppTheme.accentPink,
-        ),
+      width: 48,
+      height: 48,
+      radius: 24,
+      style: NeuStyle.convex,
+      child: const Icon(
+        Icons.add_rounded,
+        size: 28,
+        color: AppTheme.accentPink,
       ),
     );
   }
@@ -147,7 +145,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            GestureDetector(
+            NeuContainer(
               onTap: () {
                 Navigator.pop(context);
                 showModalBottomSheet(
@@ -157,27 +155,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   builder: (context) => const LogPeriodScreen(),
                 );
               },
-              child: NeuContainer(
-                padding: const EdgeInsets.all(20),
-                radius: 24,
-                child: Row(
-                  children: [
-                    const Text('🩸', style: TextStyle(fontSize: 24)),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Log Period',
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textDark,
-                      ),
+              padding: const EdgeInsets.all(20),
+              radius: 24,
+              child: Row(
+                children: [
+                  const Text('🩸', style: TextStyle(fontSize: 24)),
+                  const SizedBox(width: 16),
+                  Text(
+                    'Log Period',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textDark,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ).animate().slideY(begin: 0.1, duration: 200.ms),
             const SizedBox(height: 16),
-            GestureDetector(
+            NeuContainer(
               onTap: () {
                 Navigator.pop(context);
                 showModalBottomSheet(
@@ -187,23 +183,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   builder: (context) => const DailyCheckinScreen(),
                 );
               },
-              child: NeuContainer(
-                padding: const EdgeInsets.all(20),
-                radius: 24,
-                child: Row(
-                  children: [
-                    const Text('📝', style: TextStyle(fontSize: 24)),
-                    const SizedBox(width: 16),
-                    Text(
-                      'Daily Check-in',
-                      style: GoogleFonts.inter(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textDark,
-                      ),
+              padding: const EdgeInsets.all(20),
+              radius: 24,
+              child: Row(
+                children: [
+                  const Text('📝', style: TextStyle(fontSize: 24)),
+                  const SizedBox(width: 16),
+                  Text(
+                    'Daily Check-in',
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textDark,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ).animate().slideY(begin: 0.1, delay: 100.ms, duration: 200.ms),
           ],
