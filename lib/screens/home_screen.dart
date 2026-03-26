@@ -46,41 +46,40 @@ class _HomeScreenState extends State<HomeScreen> {
     final storage = context.watch<StorageService>();
     final pred = context.watch<PredictionService>();
 
-    return Scaffold(
-      backgroundColor: AppTheme.frameColor,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-          ),
-          _buildDreamyBackground(),
-          SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 16),
-                  _buildTopRow(context, storage),
-                  const SizedBox(height: 40),
+    return Stack(
+      children: [
+        Container(
+          decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
+        ),
+        _buildDreamyBackground(),
+        SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 16),
+                _buildTopRow(context, storage),
+                const SizedBox(height: 24),
+                _GreetingSection(storage: storage),
+                const SizedBox(height: 40),
 
-                  if (storage.userGoal == 'pregnant')
-                    _buildPregnancyDashboard(context, storage)
-                  else if (storage.userGoal == 'conceive')
-                    _buildTTCDashboard(context, storage)
-                  else
-                    _buildCycleDashboard(context, storage, pred),
+                if (storage.userGoal == 'pregnant')
+                  _buildPregnancyDashboard(context, storage)
+                else if (storage.userGoal == 'conceive')
+                  _buildTTCDashboard(context, storage)
+                else
+                  _buildCycleDashboard(context, storage, pred),
 
-                  const SizedBox(height: 48),
-                  _buildMedicalDisclaimer(),
-                  const SizedBox(height: 120),
-                ],
-              ),
+                const SizedBox(height: 48),
+                _buildMedicalDisclaimer(),
+                const SizedBox(height: 120),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -88,7 +87,24 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _GreetingSection(storage: storage),
+        // Sidebar Menu Button
+        Builder(
+          builder: (context) => NeuContainer(
+            radius: 18,
+            padding: const EdgeInsets.all(10),
+            style: NeuStyle.convex,
+            onTap: () {
+              Scaffold.of(context).openDrawer();
+            },
+            child: const Icon(
+              Icons.menu_rounded,
+              color: AppTheme.textDark,
+              size: 26,
+            ),
+          ),
+        ),
+        
+        // Mode Badge
         _buildCurrentModeBadge(storage),
       ],
     );
@@ -930,43 +946,25 @@ class _GreetingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hello, ${storage.userName.split(' ').first}!',
-              style: GoogleFonts.poppins(
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                color: AppTheme.textDark,
-                letterSpacing: -0.5,
-              ),
-            ),
-            Text(
-              DateFormat('EEEE, MMMM d').format(DateTime.now()),
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: AppTheme.textSecondary,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 0.2,
-              ),
-            ),
-          ],
-        ),
-        NeuContainer(
-          radius: 20,
-          padding: const EdgeInsets.all(10),
-          style: NeuStyle.convex,
-          onTap: () {
-            Scaffold.of(context).openDrawer();
-          },
-          child: const Icon(
-            Icons.menu_rounded,
+        Text(
+          'Hello, ${storage.userName.split(' ').first}!',
+          style: GoogleFonts.poppins(
+            fontSize: 28,
+            fontWeight: FontWeight.w900,
             color: AppTheme.textDark,
-            size: 28,
+            letterSpacing: -0.5,
+          ),
+        ),
+        Text(
+          DateFormat('EEEE, MMMM d').format(DateTime.now()),
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            color: AppTheme.textSecondary,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
           ),
         ),
       ],

@@ -14,193 +14,211 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final storage = context.watch<StorageService>();
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: NeuContainer(
-              padding: const EdgeInsets.all(8),
-              radius: 12,
-              style: NeuStyle.convex,
-              child: const Icon(Icons.menu_rounded, color: AppTheme.textDark),
+    return Container(
+      decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
+      child: SafeArea(
+        child: Column(
+          children: [
+            // Custom Top Bar (replacing AppBar)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Row(
+                children: [
+                  Builder(
+                    builder: (context) => NeuContainer(
+                      padding: const EdgeInsets.all(10),
+                      radius: 18,
+                      style: NeuStyle.convex,
+                      onTap: () => Scaffold.of(context).openDrawer(),
+                      child: const Icon(
+                        Icons.menu_rounded,
+                        color: AppTheme.textDark,
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    child: Center(
+                      child: BrandName(fontSize: 22),
+                    ),
+                  ),
+                  const SizedBox(width: 48), // Spacer to balance menu button
+                ],
+              ),
             ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        title: const BrandName(fontSize: 22),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 120),
-          child: Column(
-            children: [
-              // ── Avatar ───────────────────────────────────────────────────
-              Center(
-                    child: Stack(
-                      children: [
-                        NeuContainer(
-                          padding: const EdgeInsets.all(4),
-                          radius: 50,
-                          child: CircleAvatar(
-                            radius: 46,
-                            backgroundColor: AppTheme.frameColor,
-                            backgroundImage: storage.userImagePath != null
-                                ? NetworkImage(storage.userImagePath!)
-                                : null,
-                            child: storage.userImagePath == null
-                                ? const Icon(
-                                    Icons.person_rounded,
-                                    size: 52,
-                                    color: AppTheme.accentPink,
-                                  )
-                                : null,
+
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 120),
+                child: Column(
+                  children: [
+                    // ── Avatar ───────────────────────────────────────────────────
+                    Center(
+                      child: Stack(
+                        children: [
+                          NeuContainer(
+                            padding: const EdgeInsets.all(4),
+                            radius: 50,
+                            child: CircleAvatar(
+                              radius: 46,
+                              backgroundColor: AppTheme.frameColor,
+                              backgroundImage: storage.userImagePath != null
+                                  ? NetworkImage(storage.userImagePath!)
+                                  : null,
+                              child: storage.userImagePath == null
+                                  ? const Icon(
+                                      Icons.person_rounded,
+                                      size: 52,
+                                      color: AppTheme.accentPink,
+                                    )
+                                  : null,
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => _pickImage(context, storage),
-                            child: NeuContainer(
-                              padding: const EdgeInsets.all(8),
-                              radius: 12,
-                              style: NeuStyle.convex,
-                              child: const Icon(
-                                Icons.camera_alt_rounded,
-                                size: 18,
-                                color: AppTheme.accentPink,
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () => _pickImage(context, storage),
+                              child: NeuContainer(
+                                padding: const EdgeInsets.all(8),
+                                radius: 12,
+                                style: NeuStyle.convex,
+                                child: const Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 18,
+                                  color: AppTheme.accentPink,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                  .animate()
-                  .fadeIn(duration: 600.ms)
-                  .scale(curve: Curves.easeOutBack),
+                        ],
+                      ),
+                    )
+                        .animate()
+                        .fadeIn(duration: 600.ms)
+                        .scale(curve: Curves.easeOutBack),
 
-              const SizedBox(height: 24),
-              Text(
-                storage.userName.isNotEmpty ? storage.userName : 'Guest',
-                style: GoogleFonts.poppins(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: AppTheme.textDark,
-                ),
-              ).animate().fadeIn(delay: 200.ms),
+                    const SizedBox(height: 24),
+                    Text(
+                      storage.userName.isNotEmpty ? storage.userName : 'Guest',
+                      style: GoogleFonts.poppins(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.textDark,
+                      ),
+                    ).animate().fadeIn(delay: 200.ms),
 
-              const SizedBox(height: 40),
-              _buildSectionTitle('Personal Info'),
-              const SizedBox(height: 16),
-              NeuContainer(
-                radius: 28,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  children: [
-                    _buildSettingsTile(
-                      Icons.edit_rounded,
-                      'Name',
-                      storage.userName,
-                      () => _editName(context, storage),
-                    ),
-                    _buildDivider(),
-                    _buildSettingsTile(
-                      Icons.cake_rounded,
-                      'Age',
-                      storage.userAge?.toString() ?? 'Set Age',
-                      () => _editAge(context, storage),
-                    ),
-                    _buildDivider(),
-                    _buildSettingsTile(
-                      Icons.track_changes_rounded,
-                      'Goal',
-                      storage.userGoal == 'pregnant'
-                          ? 'Track Pregnancy'
-                          : (storage.userGoal == 'conceive'
-                                ? 'Conceive'
-                                : 'Track Cycle'),
-                      null,
-                    ),
+                    const SizedBox(height: 40),
+                    _buildSectionTitle('Personal Info'),
+                    const SizedBox(height: 16),
+                    NeuContainer(
+                      radius: 28,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        children: [
+                          _buildSettingsTile(
+                            Icons.edit_rounded,
+                            'Name',
+                            storage.userName,
+                            () => _editName(context, storage),
+                          ),
+                          _buildDivider(),
+                          _buildSettingsTile(
+                            Icons.cake_rounded,
+                            'Age',
+                            storage.userAge?.toString() ?? 'Set Age',
+                            () => _editAge(context, storage),
+                          ),
+                          _buildDivider(),
+                          _buildSettingsTile(
+                            Icons.track_changes_rounded,
+                            'Goal',
+                            storage.userGoal == 'pregnant'
+                                ? 'Track Pregnancy'
+                                : (storage.userGoal == 'conceive'
+                                    ? 'Conceive'
+                                    : 'Track Cycle'),
+                            null,
+                          ),
+                        ],
+                      ),
+                    ).animate().fadeIn(delay: 200.ms),
+
+                    const SizedBox(height: 32),
+                    _buildSectionTitle('Settings'),
+                    const SizedBox(height: 16),
+                    NeuContainer(
+                      radius: 28,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        children: [
+                          _buildSettingsTile(
+                            Icons.notifications_active_rounded,
+                            'Notifications',
+                            'Enabled',
+                            () {},
+                          ),
+                          _buildDivider(),
+                          _buildSettingsTile(
+                            Icons.security_rounded,
+                            'Privacy & Security',
+                            'PIN Locked',
+                            () {},
+                          ),
+                          _buildDivider(),
+                          _buildSettingsTile(
+                            Icons.cloud_upload_rounded,
+                            'Export Data',
+                            'CSV/PDF',
+                            () async {
+                              final json = await storage.exportLogsToJson();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Data exported to console! (Demo mode)',
+                                    ),
+                                    backgroundColor: AppTheme.accentPink,
+                                  ),
+                                );
+                                debugPrint('Exported Data: $json');
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ).animate().fadeIn(delay: 400.ms),
+
+                    const SizedBox(height: 32),
+                    _buildSectionTitle('App Info'),
+                    const SizedBox(height: 16),
+                    NeuContainer(
+                      radius: 28,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Column(
+                        children: [
+                          _buildSettingsTile(
+                            Icons.info_outline_rounded,
+                            'Version',
+                            '1.2.0 (Premium Neumorphic)',
+                            null,
+                          ),
+                          _buildDivider(),
+                          _buildSettingsTile(
+                            Icons.delete_sweep_rounded,
+                            'Clear All Data',
+                            'Permanently erase logs',
+                            () => _confirmDelete(context, storage),
+                          ),
+                        ],
+                      ),
+                    ).animate().fadeIn(delay: 500.ms),
                   ],
                 ),
-              ).animate().fadeIn(delay: 200.ms),
-
-              const SizedBox(height: 32),
-              _buildSectionTitle('Settings'),
-              const SizedBox(height: 16),
-              NeuContainer(
-                radius: 28,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  children: [
-                    _buildSettingsTile(
-                      Icons.notifications_active_rounded,
-                      'Notifications',
-                      'Enabled',
-                      () {},
-                    ),
-                    _buildDivider(),
-                    _buildSettingsTile(
-                      Icons.security_rounded,
-                      'Privacy & Security',
-                      'PIN Locked',
-                      () {},
-                    ),
-                    _buildDivider(),
-                    _buildSettingsTile(
-                      Icons.cloud_upload_rounded,
-                      'Export Data',
-                      'CSV/PDF',
-                      () async {
-                        final json = await storage.exportLogsToJson();
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Data exported to console! (Demo mode)',
-                              ),
-                              backgroundColor: AppTheme.accentPink,
-                            ),
-                          );
-                          debugPrint('Exported Data: $json');
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(delay: 400.ms),
-
-              const SizedBox(height: 32),
-              _buildSectionTitle('App Info'),
-              const SizedBox(height: 16),
-              NeuContainer(
-                radius: 28,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  children: [
-                    _buildSettingsTile(
-                      Icons.info_outline_rounded,
-                      'Version',
-                      '1.2.0 (Premium Neumorphic)',
-                      null,
-                    ),
-                    _buildDivider(),
-                    _buildSettingsTile(
-                      Icons.delete_sweep_rounded,
-                      'Clear All Data',
-                      'Permanently erase logs',
-                      () => _confirmDelete(context, storage),
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(delay: 500.ms),
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
