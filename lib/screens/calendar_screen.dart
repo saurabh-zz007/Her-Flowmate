@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../services/storage_service.dart';
 import '../services/prediction_service.dart';
 import '../utils/app_theme.dart';
+import '../widgets/glass_container.dart';
 import '../widgets/neu_container.dart';
 import '../widgets/delight_widgets.dart';
 import '../widgets/notification_widgets.dart';
@@ -92,7 +93,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     const SizedBox(height: 16),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: NeuContainer(
+                      child: GlassContainer(
                         radius: 32,
                         padding: const EdgeInsets.all(16),
                         child: TableCalendar(
@@ -115,7 +116,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             titleTextStyle: GoogleFonts.poppins(
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
-                              color: AppTheme.textDark,
+                              color: AppTheme.midnightPlum,
                             ),
                             leftChevronIcon: const Icon(
                               Icons.chevron_left_rounded,
@@ -261,7 +262,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final biology = pred.getPhaseBiology(cycleDay);
     final chance = pred.getConceptionChance(date);
 
-    return NeuContainer(
+    return GlassContainer(
       padding: const EdgeInsets.all(24),
       radius: 28,
       child: Column(
@@ -278,7 +279,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: AppTheme.textDark,
+                      color: AppTheme.midnightPlum,
                     ),
                   ),
                   Text(
@@ -299,8 +300,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 decoration: BoxDecoration(
                   color: AppTheme.phaseColor(
                     phase.displayName,
-                  ).withOpacity(0.2),
+                  ).withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppTheme.phaseColor(phase.displayName).withOpacity(0.3),
+                  ),
                 ),
                 child: Text(
                   phase.displayName,
@@ -425,22 +429,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final isLuteal = phase == CyclePhase.luteal;
 
     Color? bgColor;
+    Gradient? gradient;
     BoxBorder? border;
 
     if (isSelected) {
-      bgColor = AppTheme.accentPink.withOpacity(0.8);
-      border = Border.all(color: AppTheme.accentPink, width: 2);
+      gradient = const LinearGradient(
+        colors: [AppTheme.accentPink, AppTheme.accentPurple],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+      border = Border.all(color: Colors.white, width: 2);
     } else if (isPeriod) {
-      bgColor = AppTheme.phaseColors['Menstrual'];
+      gradient = LinearGradient(
+        colors: [
+          AppTheme.phaseColors['Menstrual']!,
+          AppTheme.phaseColors['Menstrual']!.withOpacity(0.7),
+        ],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      );
     } else if (isFollicular) {
-      bgColor = AppTheme.phaseColors['Follicular']!.withOpacity(0.3);
+      bgColor = AppTheme.phaseColors['Follicular']!.withOpacity(0.15);
     } else if (isLuteal) {
-      bgColor = AppTheme.phaseColors['Luteal']!.withOpacity(0.3);
+      bgColor = AppTheme.phaseColors['Luteal']!.withOpacity(0.15);
     }
 
     if (isToday && !isSelected) {
       border = Border.all(
-        color: AppTheme.accentPink.withOpacity(0.5),
+        color: AppTheme.accentPink.withOpacity(0.6),
         width: 1.5,
       );
     }
@@ -449,17 +465,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: bgColor,
+        gradient: gradient,
         shape: BoxShape.circle,
         border: border,
         boxShadow: isOvulation
             ? [
                 BoxShadow(
-                  color: AppTheme.phaseColors['Ovulation']!.withOpacity(0.4),
-                  blurRadius: 8,
-                  spreadRadius: 1,
+                  color: AppTheme.phaseColors['Ovulation']!.withOpacity(0.6),
+                  blurRadius: 10,
+                  spreadRadius: 2,
                 ),
               ]
-            : null,
+            : (isSelected
+                ? [
+                    BoxShadow(
+                      color: AppTheme.accentPink.withOpacity(0.4),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    )
+                  ]
+                : null),
       ),
       alignment: Alignment.center,
       child: Stack(
@@ -468,9 +493,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Text(
             '${day.day}',
             style: GoogleFonts.inter(
-              color: isSelected || isPeriod ? Colors.white : AppTheme.textDark,
+              color: isSelected || isPeriod ? Colors.white : AppTheme.midnightPlum,
               fontWeight: isSelected || isToday || isPeriod
-                  ? FontWeight.w800
+                  ? FontWeight.w900
                   : FontWeight.w600,
               fontSize: 14,
             ),
@@ -527,9 +552,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
         Text(
           label,
           style: GoogleFonts.inter(
-            color: AppTheme.textSecondary,
+            color: AppTheme.midnightPlum,
             fontSize: 13,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ],
@@ -586,8 +611,8 @@ class _DailyLogSheet extends StatelessWidget {
                         DateFormat('MMMM d').format(date),
                         style: GoogleFonts.poppins(
                           fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: AppTheme.textDark,
+                          fontWeight: FontWeight.w900,
+                          color: AppTheme.midnightPlum,
                         ),
                       ),
                       Text(
