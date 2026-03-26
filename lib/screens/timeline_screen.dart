@@ -177,7 +177,7 @@ class _TimelineRow extends StatelessWidget {
                   boxShadow: isToday
                       ? [
                           BoxShadow(
-                            color: phaseColor.withOpacity(0.4),
+                            color: phaseColor.withValues(alpha: 0.4),
                             blurRadius: 8,
                           ),
                         ]
@@ -192,7 +192,10 @@ class _TimelineRow extends StatelessWidget {
                     : null,
               ),
               Expanded(
-                child: Container(width: 2, color: phaseColor.withOpacity(0.2)),
+                child: Container(
+                  width: 2,
+                  color: phaseColor.withValues(alpha: 0.2),
+                ),
               ),
             ],
           ),
@@ -219,7 +222,7 @@ class _TimelineRow extends StatelessWidget {
                         vertical: 14,
                       ),
                       decoration: BoxDecoration(
-                        color: phaseColor.withOpacity(0.08),
+                        color: phaseColor.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: _rowContent(),

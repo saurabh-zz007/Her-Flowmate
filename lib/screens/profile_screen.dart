@@ -21,7 +21,12 @@ class ProfileScreen extends StatelessWidget {
           children: [
             // Custom Top Bar (replacing AppBar)
             Padding(
-              padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 16),
+              padding: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+                bottom: 16,
+              ),
               child: Row(
                 children: [
                   Builder(
@@ -63,46 +68,46 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     // ── Avatar ───────────────────────────────────────────────────
                     Center(
-                      child: Stack(
-                        children: [
-                          NeuContainer(
-                            padding: const EdgeInsets.all(4),
-                            radius: 50,
-                            child: CircleAvatar(
-                              radius: 46,
-                              backgroundColor: AppTheme.frameColor,
-                              backgroundImage: storage.userImagePath != null
-                                  ? NetworkImage(storage.userImagePath!)
-                                  : null,
-                              child: storage.userImagePath == null
-                                  ? const Icon(
-                                      Icons.person_rounded,
-                                      size: 52,
-                                      color: AppTheme.accentPink,
-                                    )
-                                  : null,
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () => _pickImage(context, storage),
-                              child: NeuContainer(
-                                padding: const EdgeInsets.all(8),
-                                radius: 12,
-                                style: NeuStyle.convex,
-                                child: const Icon(
-                                  Icons.camera_alt_rounded,
-                                  size: 18,
-                                  color: AppTheme.accentPink,
+                          child: Stack(
+                            children: [
+                              NeuContainer(
+                                padding: const EdgeInsets.all(4),
+                                radius: 50,
+                                child: CircleAvatar(
+                                  radius: 46,
+                                  backgroundColor: AppTheme.frameColor,
+                                  backgroundImage: storage.userImagePath != null
+                                      ? NetworkImage(storage.userImagePath!)
+                                      : null,
+                                  child: storage.userImagePath == null
+                                      ? const Icon(
+                                          Icons.person_rounded,
+                                          size: 52,
+                                          color: AppTheme.accentPink,
+                                        )
+                                      : null,
                                 ),
                               ),
-                            ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: GestureDetector(
+                                  onTap: () => _pickImage(context, storage),
+                                  child: NeuContainer(
+                                    padding: const EdgeInsets.all(8),
+                                    radius: 12,
+                                    style: NeuStyle.convex,
+                                    child: const Icon(
+                                      Icons.camera_alt_rounded,
+                                      size: 18,
+                                      color: AppTheme.accentPink,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
+                        )
                         .animate()
                         .fadeIn(duration: 600.ms)
                         .scale(curve: Curves.easeOutBack),
@@ -145,8 +150,8 @@ class ProfileScreen extends StatelessWidget {
                             storage.userGoal == 'pregnant'
                                 ? 'Track Pregnancy'
                                 : (storage.userGoal == 'conceive'
-                                    ? 'Conceive'
-                                    : 'Track Cycle'),
+                                      ? 'Conceive'
+                                      : 'Track Cycle'),
                             null,
                           ),
                         ],
@@ -302,7 +307,7 @@ class ProfileScreen extends StatelessWidget {
     return Divider(
       height: 1,
       thickness: 1,
-      color: AppTheme.shadowDark.withOpacity(0.05),
+      color: AppTheme.shadowDark.withValues(alpha: 0.05),
       indent: 64,
       endIndent: 24,
     );

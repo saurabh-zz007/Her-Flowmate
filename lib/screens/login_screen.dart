@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Your data is stored only on this device.\nIf the app is removed, your data will not be recovered.',
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: AppTheme.textSecondary.withOpacity(0.8),
+                    color: AppTheme.textSecondary.withValues(alpha: 0.8),
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,

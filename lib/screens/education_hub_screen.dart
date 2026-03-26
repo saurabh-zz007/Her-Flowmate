@@ -122,47 +122,48 @@ class EducationHubScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      child: GlassContainer(
-                        radius: 24,
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: color.withOpacity(0.15),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text(
-                                a['icon']!,
-                                style: const TextStyle(fontSize: 24),
-                              ),
+                      child:
+                          GlassContainer(
+                            radius: 24,
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    a['icon']!,
+                                    style: const TextStyle(fontSize: 24),
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  a['title']!,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.midnightPlum,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  a['subtitle']!,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    color: AppTheme.textSecondary,
+                                    height: 1.3,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const Spacer(),
-                            Text(
-                              a['title']!,
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.midnightPlum,
-                                height: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              a['subtitle']!,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color: AppTheme.textSecondary,
-                                height: 1.3,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ).animate().scale(
+                          ).animate().scale(
                             delay: (100 * index).ms,
                             duration: 400.ms,
                             curve: Curves.easeOutBack,
@@ -189,7 +190,7 @@ class EducationHubScreen extends StatelessWidget {
             height: 300,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme.accentPink.withOpacity(0.05),
+              color: AppTheme.accentPink.withValues(alpha: 0.05),
             ),
           ),
         ),
@@ -201,7 +202,7 @@ class EducationHubScreen extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme.accentPurple.withOpacity(0.03),
+              color: AppTheme.accentPurple.withValues(alpha: 0.03),
             ),
           ),
         ),
@@ -255,7 +256,7 @@ class _ArticleDetailScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: themeColor.withOpacity(0.15),
+                    color: themeColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: Text(icon, style: const TextStyle(fontSize: 64)),
@@ -286,7 +287,7 @@ class _ArticleDetailScreen extends StatelessWidget {
                             content.replaceAll('\\n', '\n'),
                             style: GoogleFonts.inter(
                               fontSize: 16,
-                              color: AppTheme.textDark.withOpacity(0.8),
+                              color: AppTheme.textDark.withValues(alpha: 0.8),
                               height: 1.8,
                             ),
                           ),

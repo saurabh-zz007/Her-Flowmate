@@ -115,7 +115,7 @@ class _PartnerSyncScreenState extends State<PartnerSyncScreen> {
                       Container(
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -173,7 +173,9 @@ class _PartnerSyncScreenState extends State<PartnerSyncScreen> {
                               borderRadius: BorderRadius.circular(24),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.accentPink.withOpacity(0.4),
+                                  color: AppTheme.accentPink.withValues(
+                                    alpha: 0.4,
+                                  ),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -206,10 +208,10 @@ class _PartnerSyncScreenState extends State<PartnerSyncScreen> {
                             horizontal: 24,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: AppTheme.accentPink.withOpacity(0.3),
+                              color: AppTheme.accentPink.withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
@@ -272,7 +274,7 @@ class _PartnerSyncScreenState extends State<PartnerSyncScreen> {
                             decoration: BoxDecoration(
                               color: AppTheme.phaseColor(
                                 phase.displayName,
-                              ).withOpacity(0.2),
+                              ).withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
@@ -312,10 +314,10 @@ class _PartnerSyncScreenState extends State<PartnerSyncScreen> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: 0.4),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.6),
+                            color: Colors.white.withValues(alpha: 0.6),
                           ),
                         ),
                         child: Text(

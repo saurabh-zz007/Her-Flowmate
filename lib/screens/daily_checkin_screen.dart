@@ -104,7 +104,7 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                     width: 48,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -231,12 +231,14 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                         decoration: BoxDecoration(
                           color: isSel
                               ? AppTheme.accentPink
-                              : Colors.white.withOpacity(0.5),
+                              : Colors.white.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: isSel
                               ? [
                                   BoxShadow(
-                                    color: AppTheme.accentPink.withOpacity(0.3),
+                                    color: AppTheme.accentPink.withValues(
+                                      alpha: 0.3,
+                                    ),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -294,14 +296,14 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                         decoration: BoxDecoration(
                           color: isSel
                               ? const Color(0xFFBA68C8)
-                              : Colors.white.withOpacity(0.5),
+                              : Colors.white.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: isSel
                               ? [
                                   BoxShadow(
                                     color: const Color(
                                       0xFFBA68C8,
-                                    ).withOpacity(0.3),
+                                    ).withValues(alpha: 0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),
@@ -345,7 +347,7 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                           decoration: BoxDecoration(
                             color: isSel
                                 ? AppTheme.accentPink
-                                : Colors.white.withOpacity(0.5),
+                                : Colors.white.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: isSel
                                 ? [
@@ -405,14 +407,14 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                         decoration: BoxDecoration(
                           color: isSel
                               ? const Color(0xFF81C784)
-                              : Colors.white.withOpacity(0.5),
+                              : Colors.white.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: isSel
                               ? [
                                   BoxShadow(
                                     color: const Color(
                                       0xFF81C784,
-                                    ).withOpacity(0.3),
+                                    ).withValues(alpha: 0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 4),
                                   ),
@@ -488,7 +490,7 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: TextField(
@@ -498,7 +500,7 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                       border: InputBorder.none,
                       hintText: 'How was your day?',
                       hintStyle: GoogleFonts.inter(
-                        color: AppTheme.textSecondary.withOpacity(0.5),
+                        color: AppTheme.textSecondary.withValues(alpha: 0.5),
                       ),
                     ),
                     style: GoogleFonts.inter(color: AppTheme.textDark),
@@ -540,7 +542,7 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.accentPink.withOpacity(0.4),
+                          color: AppTheme.accentPink.withValues(alpha: 0.4),
                           blurRadius: 16,
                           offset: const Offset(0, 8),
                         ),

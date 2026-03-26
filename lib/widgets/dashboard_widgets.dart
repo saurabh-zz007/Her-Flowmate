@@ -116,7 +116,7 @@ class StatusRow extends StatelessWidget {
             Container(
               width: 1.5,
               height: 40,
-              color: AppTheme.shadowDark.withOpacity(0.2),
+              color: AppTheme.shadowDark.withValues(alpha: 0.2),
             ),
             const SizedBox(width: 24),
             Expanded(
@@ -201,7 +201,7 @@ class FertilityCard extends StatelessWidget {
                 GlassContainer(
                   radius: 16,
                   padding: const EdgeInsets.all(12),
-                  borderColor: Colors.white.withOpacity(0.5),
+                  borderColor: Colors.white.withValues(alpha: 0.5),
                   child:
                       const Icon(
                             Icons.favorite_rounded,
@@ -245,7 +245,7 @@ class FertilityCard extends StatelessWidget {
               height: 12,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: FractionallySizedBox(
@@ -257,7 +257,7 @@ class FertilityCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.accentPink.withOpacity(0.4),
+                        color: AppTheme.accentPink.withValues(alpha: 0.4),
                         blurRadius: 8,
                         spreadRadius: 1,
                       ),
@@ -285,7 +285,7 @@ class MedicalDisclaimer extends StatelessWidget {
           'This is an estimate based on cycle patterns and should not be considered medical advice.',
           style: GoogleFonts.inter(
             fontSize: 11,
-            color: AppTheme.textSecondary.withOpacity(0.6),
+            color: AppTheme.textSecondary.withValues(alpha: 0.6),
             fontStyle: FontStyle.italic,
           ),
           textAlign: TextAlign.center,

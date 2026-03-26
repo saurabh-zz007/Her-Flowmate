@@ -19,7 +19,9 @@ class HistoryScreen extends StatelessWidget {
 
     return Stack(
       children: [
-        Container(decoration: const BoxDecoration(gradient: AppTheme.bgGradient)),
+        Container(
+          decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
+        ),
         _buildDreamyBackground(),
         SafeArea(
           bottom: false,
@@ -97,8 +99,9 @@ class HistoryScreen extends StatelessWidget {
                                     child: LineChart(
                                       LineChartData(
                                         gridData: const FlGridData(show: false),
-                                        titlesData:
-                                            const FlTitlesData(show: false),
+                                        titlesData: const FlTitlesData(
+                                          show: false,
+                                        ),
                                         borderData: FlBorderData(show: false),
                                         lineBarsData: [
                                           LineChartBarData(
@@ -116,12 +119,13 @@ class HistoryScreen extends StatelessWidget {
                                             color: AppTheme.accentPink,
                                             barWidth: 4,
                                             isStrokeCapRound: true,
-                                            dotData:
-                                                const FlDotData(show: true),
+                                            dotData: const FlDotData(
+                                              show: true,
+                                            ),
                                             belowBarData: BarAreaData(
                                               show: true,
                                               color: AppTheme.accentPink
-                                                  .withOpacity(0.1),
+                                                  .withValues(alpha: 0.1),
                                             ),
                                           ),
                                         ],
@@ -169,7 +173,8 @@ class HistoryScreen extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
                           itemCount: logs.length,
                           itemBuilder: (ctx, i) {
-                            final log = logs[logs.length - 1 - i]; // Latest first
+                            final log =
+                                logs[logs.length - 1 - i]; // Latest first
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 16),
                               child: GlassContainer(
@@ -182,8 +187,9 @@ class HistoryScreen extends StatelessWidget {
                                         width: 56,
                                         height: 56,
                                         decoration: BoxDecoration(
-                                          color: AppTheme.accentPink
-                                              .withOpacity(0.1),
+                                          color: AppTheme.accentPink.withValues(
+                                            alpha: 0.1,
+                                          ),
                                           shape: BoxShape.circle,
                                         ),
                                         child: const Center(
@@ -229,7 +235,9 @@ class HistoryScreen extends StatelessWidget {
                                                     style: TextStyle(
                                                       color: AppTheme
                                                           .textSecondary
-                                                          .withOpacity(0.5),
+                                                          .withValues(
+                                                            alpha: 0.5,
+                                                          ),
                                                     ),
                                                   ),
                                                   const SizedBox(width: 8),
@@ -285,7 +293,7 @@ class HistoryScreen extends StatelessWidget {
             height: 300,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme.accentPink.withOpacity(0.05),
+              color: AppTheme.accentPink.withValues(alpha: 0.05),
             ),
           ),
         ),
@@ -297,7 +305,7 @@ class HistoryScreen extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme.accentPurple.withOpacity(0.03),
+              color: AppTheme.accentPurple.withValues(alpha: 0.03),
             ),
           ),
         ),

@@ -52,7 +52,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             // Custom Top Bar (replacing AppBar)
             Padding(
-              padding: const EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 16),
+              padding: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                top: 24,
+                bottom: 16,
+              ),
               child: Row(
                 children: [
                   Builder(
@@ -203,8 +208,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               radius: 20,
                               onTap: () {},
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 child: Center(
                                   child: Text(
                                     'Add Note',
@@ -223,8 +229,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               radius: 20,
                               onTap: () => Navigator.pop(context),
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 child: Center(
                                   child: Text(
                                     'View Insights',
@@ -300,10 +307,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 decoration: BoxDecoration(
                   color: AppTheme.phaseColor(
                     phase.displayName,
-                  ).withOpacity(0.15),
+                  ).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppTheme.phaseColor(phase.displayName).withOpacity(0.3),
+                    color: AppTheme.phaseColor(
+                      phase.displayName,
+                    ).withValues(alpha: 0.3),
                   ),
                 ),
                 child: Text(
@@ -443,20 +452,20 @@ class _CalendarScreenState extends State<CalendarScreen> {
       gradient = LinearGradient(
         colors: [
           AppTheme.phaseColors['Menstrual']!,
-          AppTheme.phaseColors['Menstrual']!.withOpacity(0.7),
+          AppTheme.phaseColors['Menstrual']!.withValues(alpha: 0.7),
         ],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
       );
     } else if (isFollicular) {
-      bgColor = AppTheme.phaseColors['Follicular']!.withOpacity(0.15);
+      bgColor = AppTheme.phaseColors['Follicular']!.withValues(alpha: 0.15);
     } else if (isLuteal) {
-      bgColor = AppTheme.phaseColors['Luteal']!.withOpacity(0.15);
+      bgColor = AppTheme.phaseColors['Luteal']!.withValues(alpha: 0.15);
     }
 
     if (isToday && !isSelected) {
       border = Border.all(
-        color: AppTheme.accentPink.withOpacity(0.6),
+        color: AppTheme.accentPink.withValues(alpha: 0.6),
         width: 1.5,
       );
     }
@@ -471,20 +480,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
         boxShadow: isOvulation
             ? [
                 BoxShadow(
-                  color: AppTheme.phaseColors['Ovulation']!.withOpacity(0.6),
+                  color: AppTheme.phaseColors['Ovulation']!.withValues(
+                    alpha: 0.6,
+                  ),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
               ]
             : (isSelected
-                ? [
-                    BoxShadow(
-                      color: AppTheme.accentPink.withOpacity(0.4),
-                      blurRadius: 8,
-                      spreadRadius: 1,
-                    )
-                  ]
-                : null),
+                  ? [
+                      BoxShadow(
+                        color: AppTheme.accentPink.withValues(alpha: 0.4),
+                        blurRadius: 8,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                  : null),
       ),
       alignment: Alignment.center,
       child: Stack(
@@ -493,7 +504,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Text(
             '${day.day}',
             style: GoogleFonts.inter(
-              color: isSelected || isPeriod ? Colors.white : AppTheme.midnightPlum,
+              color: isSelected || isPeriod
+                  ? Colors.white
+                  : AppTheme.midnightPlum,
               fontWeight: isSelected || isToday || isPeriod
                   ? FontWeight.w900
                   : FontWeight.w600,
@@ -754,7 +767,9 @@ class _DailyLogSheet extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.accentPink.withOpacity(0.1),
+                                    color: AppTheme.accentPink.withValues(
+                                      alpha: 0.1,
+                                    ),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -794,7 +809,7 @@ class _DailyLogSheet extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -868,7 +883,7 @@ class _DailyLogSheet extends StatelessWidget {
                       height: 10,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: FractionallySizedBox(
@@ -892,7 +907,7 @@ class _DailyLogSheet extends StatelessWidget {
               'This is an estimate based on your cycle patterns.',
               style: GoogleFonts.inter(
                 fontSize: 12,
-                color: AppTheme.textSecondary.withOpacity(0.6),
+                color: AppTheme.textSecondary.withValues(alpha: 0.6),
                 fontStyle: FontStyle.italic,
               ),
               textAlign: TextAlign.center,

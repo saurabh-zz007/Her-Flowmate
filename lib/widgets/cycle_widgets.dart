@@ -63,7 +63,7 @@ class CycleTimeline extends StatelessWidget {
                 width: 10,
                 height: 10,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(isToday ? 1.0 : 0.4),
+                  color: color.withValues(alpha: isToday ? 1.0 : 0.4),
                   shape: BoxShape.circle,
                 ),
               );
@@ -86,7 +86,7 @@ class CycleTimeline extends StatelessWidget {
                             duration: 1200.ms,
                             curve: Curves.easeInOut,
                           )
-                          .shimmer(color: color.withOpacity(0.3))
+                          .shimmer(color: color.withValues(alpha: 0.3))
                     : dot,
               );
             }),
@@ -140,7 +140,7 @@ class _HormoneGraphState extends State<HormoneGraph> {
                 ),
                 Icon(
                   Icons.auto_graph_rounded,
-                  color: AppTheme.accentPink.withOpacity(0.5),
+                  color: AppTheme.accentPink.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ],
@@ -178,7 +178,8 @@ class _HormoneGraphState extends State<HormoneGraph> {
               LineChartData(
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (_) => AppTheme.bgColor.withOpacity(0.9),
+                    getTooltipColor: (_) =>
+                        AppTheme.bgColor.withValues(alpha: 0.9),
                     maxContentWidth: 200,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((spot) {
@@ -276,7 +277,7 @@ class _HormoneGraphState extends State<HormoneGraph> {
       barWidth: 4,
       isStrokeCapRound: true,
       shadow: Shadow(
-        color: color.withOpacity(0.3),
+        color: color.withValues(alpha: 0.3),
         blurRadius: 10,
         offset: const Offset(0, 4),
       ),
@@ -284,7 +285,7 @@ class _HormoneGraphState extends State<HormoneGraph> {
       belowBarData: BarAreaData(
         show: true,
         gradient: LinearGradient(
-          colors: [color.withOpacity(0.25), color.withOpacity(0.0)],
+          colors: [color.withValues(alpha: 0.25), color.withValues(alpha: 0.0)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -357,7 +358,7 @@ class HormoneFocusWidget extends StatelessWidget {
                     const Spacer(),
                     Icon(
                       Icons.lightbulb_rounded,
-                      color: AppTheme.accentPink.withOpacity(0.4),
+                      color: AppTheme.accentPink.withValues(alpha: 0.4),
                       size: 20,
                     ),
                   ],
@@ -402,7 +403,7 @@ class HormoneFocusWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(icon, color: color, size: 18),
@@ -553,10 +554,10 @@ class PhaseHealthTipsWidget extends StatelessWidget {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: AppTheme.accentPink.withOpacity(0.08),
+                    color: AppTheme.accentPink.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: AppTheme.accentPink.withOpacity(0.15),
+                      color: AppTheme.accentPink.withValues(alpha: 0.15),
                     ),
                   ),
                   child: Text(

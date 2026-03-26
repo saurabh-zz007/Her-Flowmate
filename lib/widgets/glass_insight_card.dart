@@ -36,7 +36,7 @@ class GlassInsightCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: accentColor.withOpacity(0.1),
+                  color: accentColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: accentColor, size: 20),
@@ -69,7 +69,7 @@ class GlassInsightCard extends StatelessWidget {
             Text(
               subtitle!,
               style: GoogleFonts.inter(
-                color: AppTheme.textSecondary.withOpacity(0.7),
+                color: AppTheme.textSecondary.withValues(alpha: 0.7),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),

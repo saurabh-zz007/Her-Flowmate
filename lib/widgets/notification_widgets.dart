@@ -65,7 +65,8 @@ class NotificationPanel extends StatelessWidget {
         radius: 32,
         opacity: 0.05,
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Now it can be min without Expanded children
+          mainAxisSize:
+              MainAxisSize.min, // Now it can be min without Expanded children
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Center(
@@ -73,7 +74,7 @@ class NotificationPanel extends StatelessWidget {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppTheme.textSecondary.withOpacity(0.3),
+                  color: AppTheme.textSecondary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -143,7 +144,7 @@ class NotificationPanel extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme.accentPink.withOpacity(0.1),
+                  color: AppTheme.accentPink.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: AppTheme.accentPink, size: 24),

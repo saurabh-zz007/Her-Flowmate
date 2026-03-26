@@ -76,7 +76,7 @@ class _ModeSettingsScreenState extends State<ModeSettingsScreen> {
                   'Switch your focus anytime. Your data history remains safe.',
                   style: GoogleFonts.inter(
                     fontSize: 16,
-                    color: AppTheme.textDark.withOpacity(0.6),
+                    color: AppTheme.textDark.withValues(alpha: 0.6),
                     height: 1.4,
                   ),
                 ).animate().fadeIn(delay: 100.ms),
@@ -250,7 +250,7 @@ class _ModeCard extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? iconColor.withOpacity(0.12)
+                    ? iconColor.withValues(alpha: 0.12)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -258,7 +258,7 @@ class _ModeCard extends StatelessWidget {
                 icon,
                 color: isSelected
                     ? iconColor
-                    : AppTheme.textDark.withOpacity(0.35),
+                    : AppTheme.textDark.withValues(alpha: 0.35),
                 size: 30,
               ),
             ),
@@ -280,7 +280,7 @@ class _ModeCard extends StatelessWidget {
                     subtitle,
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: AppTheme.textDark.withOpacity(0.6),
+                      color: AppTheme.textDark.withValues(alpha: 0.6),
                     ),
                   ),
                 ],

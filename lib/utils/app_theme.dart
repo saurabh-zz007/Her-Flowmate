@@ -6,10 +6,12 @@ abstract final class AppTheme {
   static const Color roseGold = Color(0xFFF48FB1); // More vibrant rose
   static const Color softRose = Color(0xFFFFF1F5); // Creamy soft rose
   static const Color deepRose = Color(0xFFD81B60);
-  static const Color midnightPlum = Color(0xFF2D1B36); // Deep, high contrast text
+  static const Color midnightPlum = Color(
+    0xFF2D1B36,
+  ); // Deep, high contrast text
   static const Color textDark = midnightPlum;
   static const Color textSecondary = Color(0xFF6B5876); // Muted plum
-  
+
   // Design Foundations
   static const Color bgColor = Color(0xFFFDEEF4); // Subtle pink surface
   static const Color surfaceColor = bgColor;
@@ -59,8 +61,12 @@ abstract final class AppTheme {
 
   // Aliases for Backward Compatibility
   static const Color primaryPink = roseGold;
-  static const Color accentPurple = Color(0xFFAB47BC); // Ovulation phase deep orchid
-  static const Color lavender = Color(0xFF9575CD); // Luteal phase muted lavender
+  static const Color accentPurple = Color(
+    0xFFAB47BC,
+  ); // Ovulation phase deep orchid
+  static const Color lavender = Color(
+    0xFF9575CD,
+  ); // Luteal phase muted lavender
   static const Color softPink = softRose;
 
   static Color phaseColor(String phase) => phaseColors[phase] ?? roseGold;
@@ -97,10 +103,10 @@ abstract final class AppTheme {
     Color? borderColor,
   }) {
     return BoxDecoration(
-      color: (borderColor ?? Colors.white).withOpacity(opacity),
+      color: (borderColor ?? Colors.white).withValues(alpha: opacity),
       borderRadius: BorderRadius.circular(radius),
       border: Border.all(
-        color: (borderColor ?? Colors.white).withOpacity(0.2),
+        color: (borderColor ?? Colors.white).withValues(alpha: 0.2),
         width: 1.5,
       ),
     );

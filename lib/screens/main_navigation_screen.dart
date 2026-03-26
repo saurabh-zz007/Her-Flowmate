@@ -106,7 +106,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: isSelected
             ? BoxDecoration(
-                color: AppTheme.accentPink.withOpacity(0.1),
+                color: AppTheme.accentPink.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               )
             : null,
@@ -151,7 +151,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 width: 48,
                 height: 6,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),
@@ -281,7 +281,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   ),
 
                   const SizedBox(height: 24),
-                  Divider(color: AppTheme.shadowDark.withOpacity(0.3)),
+                  Divider(color: AppTheme.shadowDark.withValues(alpha: 0.3)),
                   const SizedBox(height: 24),
 
                   _actionDrawerItem(

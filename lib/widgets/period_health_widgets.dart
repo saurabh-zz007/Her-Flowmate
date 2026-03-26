@@ -28,7 +28,7 @@ class PeriodHealthModal extends StatelessWidget {
                     width: 48,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: AppTheme.textSecondary.withOpacity(0.2),
+                      color: AppTheme.textSecondary.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -140,7 +140,7 @@ class PeriodHealthModal extends StatelessWidget {
         style: GoogleFonts.inter(
           fontSize: 14,
           height: 1.6,
-          color: AppTheme.textDark.withOpacity(0.8),
+          color: AppTheme.textDark.withValues(alpha: 0.8),
           fontWeight: FontWeight.w500,
         ),
       ),

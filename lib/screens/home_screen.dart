@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        
+
         // Mode Badge
         _buildCurrentModeBadge(storage),
       ],
@@ -128,19 +128,19 @@ class _HomeScreenState extends State<HomeScreen> {
           top: -100,
           right: -50,
           size: 250,
-          color: AppTheme.accentPink.withOpacity(0.08),
+          color: AppTheme.accentPink.withValues(alpha: 0.08),
         ),
         _buildGlowBlob(
           bottom: 100,
           left: -80,
           size: 300,
-          color: AppTheme.accentPurple.withOpacity(0.05),
+          color: AppTheme.accentPurple.withValues(alpha: 0.05),
         ),
         _buildGlowBlob(
           top: 400,
           right: -120,
           size: 200,
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
         ),
       ],
     );
@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: AppTheme.accentPink.withOpacity(0.2),
+              color: AppTheme.accentPink.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 8),
           Icon(
             Icons.keyboard_arrow_down_rounded,
-            color: AppTheme.textSecondary.withOpacity(0.5),
+            color: AppTheme.textSecondary.withValues(alpha: 0.5),
             size: 20,
           ),
         ],
@@ -307,16 +307,16 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       padding: const EdgeInsets.all(16),
       borderColor: isSelected
-          ? AppTheme.accentPink.withOpacity(0.5)
-          : Colors.white.withOpacity(0.5),
+          ? AppTheme.accentPink.withValues(alpha: 0.5)
+          : Colors.white.withValues(alpha: 0.5),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppTheme.accentPink.withOpacity(0.1)
-                  : AppTheme.textSecondary.withOpacity(0.05),
+                  ? AppTheme.accentPink.withValues(alpha: 0.1)
+                  : AppTheme.textSecondary.withValues(alpha: 0.05),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: 40,
               height: 6,
               decoration: BoxDecoration(
-                color: AppTheme.textSecondary.withOpacity(0.2),
+                color: AppTheme.textSecondary.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(3),
               ),
             ),
@@ -615,7 +615,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: 1.5,
                 height: 40,
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
               ),
               const SizedBox(width: 24),
               Expanded(
@@ -672,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 painter: _CycleRingPainter(
                   progress: day / (cycleLen == 0 ? 28 : cycleLen),
                   activeColor: AppTheme.phaseColor(phaseName),
-                  trackColor: Colors.white.withOpacity(0.6),
+                  trackColor: Colors.white.withValues(alpha: 0.6),
                 ),
               ),
             ),
@@ -682,7 +682,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 290,
               radius: 145, // Perfect circle
               style: NeuStyle.convex,
-              borderColor: Colors.white.withOpacity(0.5),
+              borderColor: Colors.white.withValues(alpha: 0.5),
               padding: const EdgeInsets.all(32),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -717,7 +717,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 16),
                   Divider(
-                    color: AppTheme.textSecondary.withOpacity(0.1),
+                    color: AppTheme.textSecondary.withValues(alpha: 0.1),
                     indent: 40,
                     endIndent: 40,
                     height: 1,
@@ -737,7 +737,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       .animate(onPlay: (c) => c.repeat())
                       .shimmer(
                         duration: 2.seconds,
-                        color: AppTheme.accentPurple.withOpacity(0.3),
+                        color: AppTheme.accentPurple.withValues(alpha: 0.3),
                       ),
                   const SizedBox(height: 8),
                   Text(
@@ -859,7 +859,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppTheme.accentPink.withOpacity(0.6),
+                          AppTheme.accentPink.withValues(alpha: 0.6),
                           AppTheme.accentPink,
                         ],
                       ),
@@ -941,7 +941,7 @@ class _HomeScreenState extends State<HomeScreen> {
           'This is an estimate based on cycle patterns and should not be considered medical advice.',
           style: GoogleFonts.inter(
             fontSize: 11,
-            color: AppTheme.textSecondary.withOpacity(0.6),
+            color: AppTheme.textSecondary.withValues(alpha: 0.6),
             fontStyle: FontStyle.italic,
           ),
           textAlign: TextAlign.center,
@@ -965,7 +965,8 @@ class _GreetingSection extends StatelessWidget {
           'Hello, ${storage.userName.split(' ').first}!',
           style: GoogleFonts.poppins(
             fontSize: 32, // Slightly larger
-            fontWeight: FontWeight.w800, // Black is a bit too heavy, w800 is premium
+            fontWeight:
+                FontWeight.w800, // Black is a bit too heavy, w800 is premium
             color: AppTheme.midnightPlum,
             letterSpacing: -1.0,
           ),
@@ -1016,7 +1017,7 @@ class _CycleRingPainter extends CustomPainter {
 
     // Outer Glow (More Vibrant)
     final shadowPaint = Paint()
-      ..color = activeColor.withOpacity(0.4)
+      ..color = activeColor.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 22
       ..strokeCap = StrokeCap.round
@@ -1032,7 +1033,7 @@ class _CycleRingPainter extends CustomPainter {
 
     final activePaint = Paint()
       ..shader = SweepGradient(
-        colors: [activeColor.withOpacity(0.4), activeColor, activeColor],
+        colors: [activeColor.withValues(alpha: 0.4), activeColor, activeColor],
         stops: const [0.0, 0.5, 1.0],
         transform: GradientRotation(-3.14159265359 / 2),
       ).createShader(Rect.fromCircle(center: center, radius: radius))

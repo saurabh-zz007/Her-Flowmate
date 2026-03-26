@@ -75,7 +75,7 @@ class _LogPeriodScreenState extends State<LogPeriodScreen> {
                     width: 48,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(3),
                     ),
                   ),
@@ -227,7 +227,7 @@ class _LogPeriodScreenState extends State<LogPeriodScreen> {
                       border: InputBorder.none,
                       hintText: 'Number of days',
                       hintStyle: GoogleFonts.inter(
-                        color: AppTheme.textSecondary.withOpacity(0.4),
+                        color: AppTheme.textSecondary.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -383,7 +383,7 @@ class _LogPeriodScreenState extends State<LogPeriodScreen> {
                   padding: EdgeInsets.zero,
                   borderColor: _selectedDate == null
                       ? Colors.transparent
-                      : AppTheme.accentPink.withOpacity(0.4),
+                      : AppTheme.accentPink.withValues(alpha: 0.4),
                   onTap: _selectedDate == null
                       ? () {}
                       : () async {
@@ -503,7 +503,7 @@ class _LogPeriodScreenState extends State<LogPeriodScreen> {
       radius: 18,
       opacity: isActive ? 0.15 : 0.05,
       borderColor: isActive
-          ? AppTheme.accentPink.withOpacity(0.3)
+          ? AppTheme.accentPink.withValues(alpha: 0.3)
           : Colors.transparent,
       onTap: onTap,
       child: Padding(

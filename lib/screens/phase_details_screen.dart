@@ -61,7 +61,7 @@ class PhaseDetailsScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.15),
+                            color: color.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: const SparkleEffect(
@@ -109,7 +109,7 @@ class PhaseDetailsScreen extends StatelessWidget {
                   details.description,
                   style: GoogleFonts.inter(
                     fontSize: 15,
-                    color: AppTheme.textDark.withOpacity(0.8),
+                    color: AppTheme.textDark.withValues(alpha: 0.8),
                     height: 1.6,
                   ),
                 ).animate().fadeIn(delay: 200.ms),
@@ -161,7 +161,7 @@ class PhaseDetailsScreen extends StatelessWidget {
                   tip,
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: AppTheme.textDark.withOpacity(0.8),
+                    color: AppTheme.textDark.withValues(alpha: 0.8),
                     fontWeight: FontWeight.w500,
                   ),
                 ),

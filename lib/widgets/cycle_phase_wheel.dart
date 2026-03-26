@@ -33,7 +33,7 @@ class CyclePhaseWheel extends StatelessWidget {
         radius: 150,
         blur: 20,
         opacity: 0.1,
-        borderColor: accentColor.withOpacity(0.2),
+        borderColor: accentColor.withValues(alpha: 0.2),
         child: Stack(
           alignment: Alignment.center,
           children: [
@@ -44,7 +44,7 @@ class CyclePhaseWheel extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   width: 2,
                 ),
               ),

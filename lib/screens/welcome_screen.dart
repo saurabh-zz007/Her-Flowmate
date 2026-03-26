@@ -110,7 +110,7 @@ class WelcomeScreen extends StatelessWidget {
                         'Reset App Data',
                         style: GoogleFonts.inter(
                           fontSize: 12,
-                          color: AppTheme.textSecondary.withOpacity(0.5),
+                          color: AppTheme.textSecondary.withValues(alpha: 0.5),
                           decoration: TextDecoration.underline,
                         ),
                       ),

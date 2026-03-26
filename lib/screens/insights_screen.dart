@@ -164,7 +164,7 @@ class InsightsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppTheme.accentPink.withOpacity(0.1),
+              color: AppTheme.accentPink.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: AppTheme.accentPink, size: 24),
@@ -198,7 +198,7 @@ class InsightsScreen extends StatelessWidget {
     return NeuContainer(
       radius: 28,
       padding: const EdgeInsets.all(24),
-      borderColor: AppTheme.accentPink.withOpacity(0.3),
+      borderColor: AppTheme.accentPink.withValues(alpha: 0.3),
       child: Row(
         children: [
           Expanded(
@@ -242,7 +242,7 @@ class InsightsScreen extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppTheme.accentPink.withOpacity(0.1),
+              color: AppTheme.accentPink.withValues(alpha: 0.1),
             ),
             child: Center(
               child: Icon(
@@ -349,7 +349,7 @@ class InsightsScreen extends StatelessWidget {
                             drawVerticalLine: false,
                             horizontalInterval: 10,
                             getDrawingHorizontalLine: (value) => FlLine(
-                              color: AppTheme.shadowDark.withOpacity(0.2),
+                              color: AppTheme.shadowDark.withValues(alpha: 0.2),
                               strokeWidth: 1,
                               dashArray: [4, 4],
                             ),
@@ -372,7 +372,9 @@ class InsightsScreen extends StatelessWidget {
                                   backDrawRodData: BackgroundBarChartRodData(
                                     show: true,
                                     toY: 40,
-                                    color: AppTheme.shadowDark.withOpacity(0.3),
+                                    color: AppTheme.shadowDark.withValues(
+                                      alpha: 0.3,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -446,7 +448,7 @@ class InsightsScreen extends StatelessWidget {
                   child: Container(
                     height: 8,
                     decoration: BoxDecoration(
-                      color: AppTheme.shadowDark.withOpacity(0.3),
+                      color: AppTheme.shadowDark.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: FractionallySizedBox(

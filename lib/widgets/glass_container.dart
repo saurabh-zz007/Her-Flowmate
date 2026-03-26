@@ -50,7 +50,9 @@ class GlassContainer extends StatelessWidget {
               filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
               child: Container(
                 decoration: BoxDecoration(
-                  color: (borderColor ?? Colors.white).withOpacity(opacity),
+                  color: (borderColor ?? Colors.white).withValues(
+                    alpha: opacity,
+                  ),
                   borderRadius: BorderRadius.circular(radius),
                 ),
               ),
@@ -66,14 +68,14 @@ class GlassContainer extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Colors.white.withOpacity(0.4),
-              Colors.white.withOpacity(0.05),
-              Colors.black.withOpacity(0.05),
+              Colors.white.withValues(alpha: 0.4),
+              Colors.white.withValues(alpha: 0.05),
+              Colors.black.withValues(alpha: 0.05),
             ],
             stops: const [0.0, 0.5, 1.0],
           ),
           border: Border.all(
-            color: (borderColor ?? Colors.white).withOpacity(0.2),
+            color: (borderColor ?? Colors.white).withValues(alpha: 0.2),
             width: 1.5,
           ),
         ),

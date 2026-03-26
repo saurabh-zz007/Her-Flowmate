@@ -144,7 +144,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     ],
                     style: GoogleFonts.inter(
                       fontSize: 16,
-                      color: AppTheme.textDark.withOpacity(0.6),
+                      color: AppTheme.textDark.withValues(alpha: 0.6),
                       height: 1.5,
                     ),
                   ),
@@ -170,7 +170,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         border: InputBorder.none,
                         hintText: 'Type your message here...',
                         hintStyle: GoogleFonts.inter(
-                          color: AppTheme.textDark.withOpacity(0.35),
+                          color: AppTheme.textDark.withValues(alpha: 0.35),
                         ),
                       ),
                     ),
