@@ -198,10 +198,64 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 32),
         _buildCycleStatusRow(cycleDay, daysToNext),
         const SizedBox(height: 24),
+        _buildNextOvulationCard(pred),
+        const SizedBox(height: 24),
         if (phaseName == 'Ovulation' || phaseName == 'Follicular')
           _buildFertilityCard(pred),
       ],
     );
+  }
+
+  Widget _buildNextOvulationCard(PredictionService pred) {
+    if (pred.nextPeriodDate == null) return const SizedBox.shrink();
+    
+    final ovulationDate = pred.nextPeriodDate!.subtract(const Duration(days: 14));
+    final daysUntil = ovulationDate.difference(DateTime.now()).inDays;
+    
+    // If it already passed this cycle, show next cycle's ovulation
+    // (A rough estimate for UI purposes, could be refined based on cycle length)
+    final displayDate = daysUntil < 0 ? ovulationDate.add(Duration(days: pred.averageCycleLength)) : ovulationDate;
+    final displayDays = daysUntil < 0 ? displayDate.difference(DateTime.now()).inDays : daysUntil;
+
+    String daysText;
+    if (displayDays == 0) {
+      daysText = '(Today)';
+    } else if (displayDays == 1) {
+      daysText = '(Tomorrow)';
+    } else {
+      daysText = '(in $displayDays days)';
+    }
+
+    return GlassContainer(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      radius: 24,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppTheme.phaseColors['Ovulation']!.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.wb_sunny_rounded, color: AppTheme.phaseColors['Ovulation'], size: 20),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Next Ovulation', style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(
+                  '${DateFormat('MMM d').format(displayDate)} $daysText', 
+                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textDark)
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1);
   }
 
   Widget _buildTTCDashboard(BuildContext context, StorageService storage) {
