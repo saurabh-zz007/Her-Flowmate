@@ -209,21 +209,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildNextOvulationCard(PredictionService pred) {
     if (pred.nextPeriodDate == null) return const SizedBox.shrink();
     
-    final ovulationDate = pred.nextPeriodDate!.subtract(const Duration(days: 14));
-    final daysUntil = ovulationDate.difference(DateTime.now()).inDays;
+    final currentOvulationDate = pred.nextPeriodDate!.subtract(const Duration(days: 14));
     
-    // If it already passed this cycle, show next cycle's ovulation
-    // (A rough estimate for UI purposes, could be refined based on cycle length)
-    final displayDate = daysUntil < 0 ? ovulationDate.add(Duration(days: pred.averageCycleLength)) : ovulationDate;
-    final displayDays = daysUntil < 0 ? displayDate.difference(DateTime.now()).inDays : daysUntil;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final ovDate = DateTime(currentOvulationDate.year, currentOvulationDate.month, currentOvulationDate.day);
+    final daysUntil = ovDate.difference(today).inDays;
 
     String daysText;
-    if (displayDays == 0) {
+    if (daysUntil == 0) {
       daysText = '(Today)';
-    } else if (displayDays == 1) {
+    } else if (daysUntil == 1) {
       daysText = '(Tomorrow)';
+    } else if (daysUntil < 0) {
+      daysText = '(Passed)';
     } else {
-      daysText = '(in $displayDays days)';
+      daysText = '(in $daysUntil days)';
     }
 
     return GlassContainer(
@@ -247,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text('Next Ovulation', style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
                 Text(
-                  '${DateFormat('MMM d').format(displayDate)} $daysText', 
+                  '${DateFormat('MMM d').format(currentOvulationDate)} $daysText',
                   style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w700, color: AppTheme.textDark)
                 ),
               ],

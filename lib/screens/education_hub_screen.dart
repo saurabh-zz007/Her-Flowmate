@@ -70,7 +70,7 @@ class EducationHubScreen extends StatelessWidget {
             itemCount: articles.length,
             itemBuilder: (context, index) {
               final a = articles[index];
-              final color = Color(int.parse(a['color']!));
+              final color = Color(int.parse(a['color']!, radix: 16));
               return GestureDetector(
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(
