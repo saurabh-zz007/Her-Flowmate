@@ -40,6 +40,7 @@ class NotificationBell extends StatelessWidget {
   void _showNotifications(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const NotificationPanel(),
     );
@@ -87,29 +88,33 @@ class NotificationPanel extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  _notifItem(
-                    'Cycle Update',
-                    'Your fertile window begins today! 🌸',
-                    'Just now',
-                    Icons.favorite_rounded,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      _notifItem(
+                        'Cycle Update',
+                        'Your fertile window begins today! 🌸',
+                        'Just now',
+                        Icons.favorite_rounded,
+                      ),
+                      _notifItem(
+                        'Logging Reminder',
+                        "Don't forget to track your symptoms today.",
+                        '2 hours ago',
+                        Icons.edit_note_rounded,
+                      ),
+                      _notifItem(
+                        'Phase Change',
+                        'Follicular phase started. Energy levels rising!',
+                        'Yesterday',
+                        Icons.bolt_rounded,
+                      ),
+                    ],
                   ),
-                  _notifItem(
-                    'Logging Reminder',
-                    "Don't forget to track your symptoms today.",
-                    '2 hours ago',
-                    Icons.edit_note_rounded,
-                  ),
-                  _notifItem(
-                    'Phase Change',
-                    'Follicular phase started. Energy levels rising!',
-                    'Yesterday',
-                    Icons.bolt_rounded,
-                  ),
-                ],
+                ),
               ),
             ),
             const SizedBox(height: 24),
