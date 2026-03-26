@@ -597,11 +597,12 @@ class _DailyLogSheet extends StatelessWidget {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
       ),
       padding: const EdgeInsets.only(top: 16),
-      child: NeuContainer(
-        radius: 40,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             Container(
               width: 44,
               height: 6,
@@ -975,8 +976,9 @@ class _DailyLogSheet extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _hormoneMiniItem(String label, String status) {
     return Column(

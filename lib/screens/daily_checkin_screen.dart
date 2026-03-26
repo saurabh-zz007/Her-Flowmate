@@ -86,8 +86,8 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
       ),
       padding: const EdgeInsets.only(top: 16),
-      child: NeuContainer(
-        radius: 40,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(

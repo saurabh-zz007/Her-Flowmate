@@ -68,6 +68,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       onTap: () {
         showModalBottomSheet(
           context: context,
+          isScrollControlled: true,
           backgroundColor: Colors.transparent,
           builder: (context) => _buildAddMenu(context),
         );
@@ -130,7 +131,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         color: AppTheme.frameColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -145,7 +146,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
