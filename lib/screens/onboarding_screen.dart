@@ -9,6 +9,7 @@ import '../services/storage_service.dart';
 import '../utils/app_theme.dart';
 import '../widgets/neu_container.dart';
 import '../widgets/brand_widgets.dart';
+import '../widgets/delight_widgets.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final bool isEmailUser;
@@ -83,7 +84,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
 
     if (_currentPage < _totalPages - 1) {
-      _pageController.nextPage(duration: 350.ms, curve: Curves.easeInOut);
+      _pageController.nextPage(duration: 400.ms, curve: Curves.easeOutCubic);
     } else {
       _finish();
     }
@@ -91,7 +92,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _back() {
     if (_currentPage > 0) {
-      _pageController.previousPage(duration: 300.ms, curve: Curves.easeInOut);
+      _pageController.previousPage(
+        duration: 350.ms,
+        curve: Curves.easeOutCubic,
+      );
     }
   }
 
@@ -116,7 +120,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         weeks: weeks,
       );
     } else if (_lastPeriodStart != null) {
-      // Create the first log
       final logDate = DateTime(
         _lastPeriodStart!.year,
         _lastPeriodStart!.month,
@@ -137,108 +140,119 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
+    return AnimatedGlowBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          toolbarHeight: 90,
+          automaticallyImplyLeading: false,
+          leadingWidth: 80,
+          leading: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12, top: 8),
+            child: NeuContainer(
+              padding: const EdgeInsets.all(12),
+              radius: 16,
+              onTap: () {
+                debugPrint('Step Back: page=$_currentPage, init=${widget.initialPage}');
+                if (_currentPage > widget.initialPage) {
+                  _back();
+                } else {
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: AppTheme.textDark,
+                size: 18,
+              ),
+            ),
+            ),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'STEP ${_currentPage + 1} OF $_totalPages',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: AppTheme.textDark.withValues(alpha: 0.5),
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _ProgressBar(
+                  current: _currentPage,
+                  total: _totalPages,
+                ),
+              ],
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: SafeArea(
           child: Column(
             children: [
-              // ── Top bar ──────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _currentPage > widget.initialPage
-                          ? _back
-                          : () => Navigator.pop(context),
-                      child: NeuContainer(
-                        padding: const EdgeInsets.all(10),
-                        radius: 14,
-                        child: const Icon(
-                          Icons.arrow_back_rounded,
-                          color: AppTheme.textDark,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Step ${_currentPage + 1} of $_totalPages',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textDark.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          _ProgressBar(
-                            current: _currentPage,
-                            total: _totalPages,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 40),
-                  ],
-                ),
-              ),
-
               // ── Pages ────────────────────────────────────────────
               Expanded(
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (i) => setState(() => _currentPage = i),
-                  children: [_goalPage(), _infoPage(), _periodPage()],
+                  children: [
+                    _goalPage().animate().fadeIn(duration: 400.ms),
+                    _infoPage().animate().fadeIn(duration: 400.ms),
+                    _periodPage().animate().fadeIn(duration: 400.ms),
+                  ],
                 ),
               ),
-
               // ── Continue / Finish button ──────────────────────────
               Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                    child: NeuContainer(
-                      radius: 18,
-                      child: TextButton.icon(
-                        icon: Icon(
-                          _currentPage == _totalPages - 1
-                              ? Icons.check_rounded
-                              : Icons.arrow_forward_rounded,
-                          color: AppTheme.accentPink,
-                        ),
-                        label: Text(
-                          _currentPage == _totalPages - 1
-                              ? 'Done'
-                              : 'Continue →',
-                          style: GoogleFonts.inter(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
+                padding: const EdgeInsets.fromLTRB(28, 4, 28, 24),
+                child: ShimmerButton(
+                  radius: 20,
+                  onTap: _next,
+                  child: NeuContainer(
+                    radius: 20,
+                    child: Container(
+                      width: double.infinity,
+                      height: 58,
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _currentPage == _totalPages - 1
+                                ? 'Finish Setup'
+                                : 'Continue',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: AppTheme.accentPink,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Icon(
+                            _currentPage == _totalPages - 1
+                                ? Icons.check_circle_rounded
+                                : Icons.arrow_forward_rounded,
                             color: AppTheme.accentPink,
+                            size: 20,
                           ),
-                        ),
-                        onPressed: _next,
-                        style: TextButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 56),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                        ),
+                        ],
                       ),
                     ),
-                  )
-                  .animate(
-                    target: (_currentPage == 0 && _selectedGoal.isEmpty)
-                        ? 0
-                        : 1,
-                  )
-                  .fadeIn()
-                  .slideY(begin: 0.2, end: 0),
+                  ),
+                ),
+              ).animate(
+                target: (_currentPage == 0 && _selectedGoal.isEmpty) ? 0 : 1,
+              ).fadeIn().slideY(begin: 0.2, end: 0, curve: Curves.easeOutBack),
             ],
           ),
         ),
@@ -248,12 +262,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   // ── Page 1: Goal Selection ──────────────────────────────────────────────
   Widget _goalPage() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 20),
           Text.rich(
             TextSpan(
               children: [
@@ -312,58 +325,73 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final isSelected = _selectedGoal == goal;
     return GestureDetector(
       onTap: () => setState(() => _selectedGoal = goal),
-      child: AnimatedContainer(
-        duration: 300.ms,
-        padding: const EdgeInsets.all(24),
-        decoration: isSelected
-            ? AppTheme.glassDecoration(
-                radius: 28,
-                opacity: 0.6,
-                borderColor: AppTheme.accentPink,
-              )
-            : AppTheme.glassDecoration(radius: 28, opacity: 0.2),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppTheme.accentPink.withValues(alpha: 0.1)
-                    : Colors.transparent,
-                shape: BoxShape.circle,
+      child: AnimatedScale(
+        duration: 400.ms,
+        curve: Curves.easeOutBack,
+        scale: isSelected ? 1.02 : 1.0,
+        child: AnimatedContainer(
+          duration: 400.ms,
+          padding: const EdgeInsets.all(24),
+          decoration: isSelected
+              ? AppTheme.glassDecoration(
+                  radius: 28,
+                  opacity: 0.6,
+                  borderColor: AppTheme.accentPink,
+                )
+              : AppTheme.glassDecoration(radius: 28, opacity: 0.2),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppTheme.accentPink.withValues(alpha: 0.1)
+                      : Colors.transparent,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected
+                      ? AppTheme.accentPink
+                      : AppTheme.textSecondary,
+                  size: 32,
+                ),
               ),
-              child: Icon(
-                icon,
-                color: isSelected
-                    ? AppTheme.accentPink
-                    : AppTheme.textSecondary,
-                size: 32,
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: AppTheme.textDark,
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: isSelected
+                            ? AppTheme.accentPink
+                            : AppTheme.textDark,
+                      ),
                     ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppTheme.textSecondary,
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: AppTheme.textSecondary,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              if (isSelected)
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: AppTheme.accentPink,
+                ).animate().scale(curve: Curves.elasticOut),
+            ],
+          ),
         ),
       ),
     );
@@ -627,11 +655,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-
-  // ── Page 4: Privacy ─────────────────────────────────────────────────────
 }
-
-// ── Progress Bar ─────────────────────────────────────────────────────────────
 
 class _ProgressBar extends StatelessWidget {
   final int current, total;
@@ -639,18 +663,29 @@ class _ProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double factor = (current + 1) / total;
     return NeuContainer(
-      height: 8,
-      radius: 4,
-      child: FractionallySizedBox(
-        alignment: Alignment.centerLeft,
-        widthFactor: (current + 1) / total,
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppTheme.accentPink,
-            borderRadius: BorderRadius.circular(4),
+      height: 12,
+      radius: 6,
+      child: Stack(
+        children: [
+          AnimatedContainer(
+            duration: 600.ms,
+            curve: Curves.easeOutCubic,
+            width: MediaQuery.of(context).size.width * 0.6 * factor,
+            decoration: BoxDecoration(
+              color: AppTheme.accentPink,
+              borderRadius: BorderRadius.circular(6),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.accentPink.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

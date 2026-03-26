@@ -365,7 +365,8 @@ class _HomeScreenState extends State<HomeScreen> {
     StorageService storage,
     PredictionService pred,
   ) {
-    if (storage.getLogs().isEmpty) return _buildNewUserContent(context, storage);
+    if (storage.getLogs().isEmpty)
+      return _buildNewUserContent(context, storage);
     return CycleDashboard(storage: storage, pred: pred);
   }
 
@@ -580,7 +581,10 @@ class CycleDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildFloralRingDashboard(BuildContext context, PredictionService pred) {
+  Widget _buildFloralRingDashboard(
+    BuildContext context,
+    PredictionService pred,
+  ) {
     final phaseName = pred.phaseDisplayName;
     final day = pred.currentCycleDay == 0 ? 1 : pred.currentCycleDay;
     final cycleLen = pred.averageCycleLength;
@@ -685,7 +689,10 @@ class CycleDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildFertilityCard(PredictionService pred, {String title = 'FERTILITY STATUS'}) {
+  Widget _buildFertilityCard(
+    PredictionService pred, {
+    String title = 'FERTILITY STATUS',
+  }) {
     final chance = pred.currentConceptionChance;
     return NeuContainer(
       padding: const EdgeInsets.all(32),
@@ -711,7 +718,9 @@ class CycleDashboard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    chance > 50 ? 'High probability today' : 'Low probability today',
+                    chance > 50
+                        ? 'High probability today'
+                        : 'Low probability today',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
@@ -722,7 +731,9 @@ class CycleDashboard extends StatelessWidget {
               ),
               Icon(
                 Icons.spa_rounded,
-                color: AppTheme.phaseColor(pred.phaseDisplayName).withValues(alpha: 0.6),
+                color: AppTheme.phaseColor(
+                  pred.phaseDisplayName,
+                ).withValues(alpha: 0.6),
                 size: 32,
               ),
             ],
@@ -762,7 +773,9 @@ class TTCDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pred = context.watch<PredictionService>();
-    final nextOvulation = pred.nextPeriodDate?.subtract(const Duration(days: 14)) ?? DateTime.now();
+    final nextOvulation =
+        pred.nextPeriodDate?.subtract(const Duration(days: 14)) ??
+        DateTime.now();
 
     return Column(
       children: [
@@ -808,7 +821,10 @@ class TTCDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildFertilityCard(PredictionService pred, {String title = 'FERTILITY STATUS'}) {
+  Widget _buildFertilityCard(
+    PredictionService pred, {
+    String title = 'FERTILITY STATUS',
+  }) {
     final chance = pred.currentConceptionChance;
     return NeuContainer(
       padding: const EdgeInsets.all(32),
@@ -834,7 +850,9 @@ class TTCDashboard extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    chance > 50 ? 'High probability today' : 'Low probability today',
+                    chance > 50
+                        ? 'High probability today'
+                        : 'Low probability today',
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
@@ -845,7 +863,9 @@ class TTCDashboard extends StatelessWidget {
               ),
               Icon(
                 Icons.spa_rounded,
-                color: AppTheme.phaseColor(pred.phaseDisplayName).withValues(alpha: 0.6),
+                color: AppTheme.phaseColor(
+                  pred.phaseDisplayName,
+                ).withValues(alpha: 0.6),
                 size: 32,
               ),
             ],
@@ -876,7 +896,8 @@ class PregnancyDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final weeks = storage.pregnancyWeeks ?? 8;
-    final dueDate = storage.dueDate ?? DateTime.now().add(const Duration(days: 220));
+    final dueDate =
+        storage.dueDate ?? DateTime.now().add(const Duration(days: 220));
     final daysRemaining = dueDate.difference(DateTime.now()).inDays;
 
     String babySize = 'Raspberry';

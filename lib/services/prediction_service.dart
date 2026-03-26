@@ -59,18 +59,21 @@ class PredictionService {
     if (periodStart == null) return 0;
 
     final normDate = DateTime(date.year, date.month, date.day);
-    final normStart =
-        DateTime(periodStart.year, periodStart.month, periodStart.day);
+    final normStart = DateTime(
+      periodStart.year,
+      periodStart.month,
+      periodStart.day,
+    );
     return normDate.difference(normStart).inDays + 1;
   }
 
   bool isFertileDay(DateTime date) =>
       CycleEngine.getPhaseForDate(
-        date,
-        storageService.getLogs(),
-        averageCycleLength,
-      ) ==
-      CyclePhase.ovulation ||
+            date,
+            storageService.getLogs(),
+            averageCycleLength,
+          ) ==
+          CyclePhase.ovulation ||
       getConceptionChance(date) > 10;
 
   bool isPeriodDay(DateTime date) {
@@ -78,8 +81,11 @@ class PredictionService {
     final normDate = DateTime(date.year, date.month, date.day);
 
     for (final log in logs) {
-      final start =
-          DateTime(log.startDate.year, log.startDate.month, log.startDate.day);
+      final start = DateTime(
+        log.startDate.year,
+        log.startDate.month,
+        log.startDate.day,
+      );
       DateTime end = log.endDate != null
           ? DateTime(log.endDate!.year, log.endDate!.month, log.endDate!.day)
           : start.add(Duration(days: log.duration - 1));
@@ -122,9 +128,11 @@ class PredictionService {
     final next = nextPeriodDate;
     if (next == null) return -1;
     final today = DateTime.now();
-    return DateTime(next.year, next.month, next.day)
-        .difference(DateTime(today.year, today.month, today.day))
-        .inDays;
+    return DateTime(
+      next.year,
+      next.month,
+      next.day,
+    ).difference(DateTime(today.year, today.month, today.day)).inDays;
   }
 
   int get daysUntilOvulation {

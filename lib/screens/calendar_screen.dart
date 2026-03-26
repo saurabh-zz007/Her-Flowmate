@@ -603,132 +603,91 @@ class _DailyLogSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-            Container(
-              width: 44,
-              height: 6,
-              decoration: BoxDecoration(
-                color: AppTheme.shadowDark,
-                borderRadius: BorderRadius.circular(3),
+              Container(
+                width: 44,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: AppTheme.shadowDark,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        DateFormat('MMMM d').format(date),
-                        style: GoogleFonts.poppins(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                          color: AppTheme.midnightPlum,
-                        ),
-                      ),
-                      Text(
-                        DateFormat('EEEE').format(date),
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: AppTheme.textSecondary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  NeuContainer(
-                    radius: 16,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      'Day ${pred.getCycleDay(date)}',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.accentPink,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
-                children: [
-                  Text(
-                    'Phase:',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppTheme.textSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    pred.getPhaseForDay(date).displayName,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: AppTheme.textDark,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Hormone Status Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: NeuContainer(
-                padding: const EdgeInsets.all(20),
-                radius: 24,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Hormone Status',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _hormoneMiniItem(
-                          'Estrogen',
-                          pred.getHormoneDescriptions(
-                            pred.getCycleDay(date),
-                          )['Estrogen']!,
+                        Text(
+                          DateFormat('MMMM d').format(date),
+                          style: GoogleFonts.poppins(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                            color: AppTheme.midnightPlum,
+                          ),
                         ),
-                        _hormoneMiniItem(
-                          'Progesterone',
-                          pred.getHormoneDescriptions(
-                            pred.getCycleDay(date),
-                          )['Progesterone']!,
+                        Text(
+                          DateFormat('EEEE').format(date),
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: AppTheme.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
+                    ),
+                    NeuContainer(
+                      radius: 16,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: Text(
+                        'Day ${pred.getCycleDay(date)}',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: AppTheme.accentPink,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
 
-            if (dailyLog != null) ...[
+              const SizedBox(height: 16),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: [
+                    Text(
+                      'Phase:',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      pred.getPhaseForDay(date).displayName,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: AppTheme.textDark,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               const SizedBox(height: 24),
+
+              // Hormone Status Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: NeuContainer(
@@ -737,163 +696,277 @@ class _DailyLogSheet extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        'Hormone Status',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: AppTheme.textSecondary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Daily Check-in',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              color: AppTheme.textSecondary,
-                              fontWeight: FontWeight.w700,
-                            ),
+                          _hormoneMiniItem(
+                            'Estrogen',
+                            pred.getHormoneDescriptions(
+                              pred.getCycleDay(date),
+                            )['Estrogen']!,
                           ),
-                          if (dailyLog.moods?.isNotEmpty == true)
-                            Text(
-                              dailyLog.moods!.first,
-                              style: const TextStyle(fontSize: 24),
-                            ),
+                          _hormoneMiniItem(
+                            'Progesterone',
+                            pred.getHormoneDescriptions(
+                              pred.getCycleDay(date),
+                            )['Progesterone']!,
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      if (dailyLog.symptoms?.isNotEmpty == true) ...[
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: dailyLog.symptoms!
-                              .map(
-                                (s) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.accentPink.withValues(
-                                      alpha: 0.1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    s,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 12,
-                                      color: AppTheme.accentPink,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                      if (dailyLog.waterIntake != null &&
-                          dailyLog.waterIntake! > 0) ...[
-                        Row(
-                          children: [
-                            const Text('💧', style: TextStyle(fontSize: 14)),
-                            const SizedBox(width: 8),
-                            Text(
-                              '${dailyLog.waterIntake} Glasses',
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                color: AppTheme.textDark,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                      if (dailyLog.notes?.isNotEmpty == true) ...[
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.3),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            dailyLog.notes!,
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              color: AppTheme.textSecondary,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        ),
-                      ],
                     ],
                   ),
                 ),
               ),
-            ],
 
-            const SizedBox(height: 24),
-
-            // Conception Chance Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: NeuContainer(
-                padding: const EdgeInsets.all(24),
-                radius: 28,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Fertility Window',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      statusText,
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textDark,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              if (dailyLog != null) ...[
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: NeuContainer(
+                    padding: const EdgeInsets.all(20),
+                    radius: 24,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Chance of Conception',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            color: AppTheme.textSecondary,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Daily Check-in',
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                color: AppTheme.textSecondary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            if (dailyLog.moods?.isNotEmpty == true)
+                              Text(
+                                dailyLog.moods!.first,
+                                style: const TextStyle(fontSize: 24),
+                              ),
+                          ],
                         ),
-                        Text(
-                          '$chance%',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: AppTheme.accentPink,
+                        const SizedBox(height: 12),
+                        if (dailyLog.symptoms?.isNotEmpty == true) ...[
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: dailyLog.symptoms!
+                                .map(
+                                  (s) => Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppTheme.accentPink.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      s,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+                                        color: AppTheme.accentPink,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
                           ),
-                        ),
+                          const SizedBox(height: 12),
+                        ],
+                        if (dailyLog.waterIntake != null &&
+                            dailyLog.waterIntake! > 0) ...[
+                          Row(
+                            children: [
+                              const Text('💧', style: TextStyle(fontSize: 14)),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${dailyLog.waterIntake} Glasses',
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  color: AppTheme.textDark,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                        if (dailyLog.notes?.isNotEmpty == true) ...[
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              dailyLog.notes!,
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
+                                color: AppTheme.textSecondary,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Container(
-                      height: 10,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 24),
+
+              // Conception Chance Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: NeuContainer(
+                  padding: const EdgeInsets.all(24),
+                  radius: 28,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Fertility Window',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          color: AppTheme.textSecondary,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                      child: FractionallySizedBox(
-                        alignment: Alignment.centerLeft,
-                        widthFactor: (chance / 100).clamp(0.01, 1.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppTheme.accentPink,
-                            borderRadius: BorderRadius.circular(5),
+                      const SizedBox(height: 4),
+                      Text(
+                        statusText,
+                        style: GoogleFonts.poppins(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: AppTheme.textDark,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Chance of Conception',
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+                              color: AppTheme.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            '$chance%',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              color: AppTheme.accentPink,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        height: 10,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: (chance / 100).clamp(0.01, 1.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppTheme.accentPink,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+              Text(
+                'This is an estimate based on your cycle patterns.',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: AppTheme.textSecondary.withValues(alpha: 0.6),
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 32),
+
+              // Action Buttons
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: NeuContainer(
+                        radius: 20,
+                        onTap: () {
+                          showPhaseDelight(context, 'Period Logged');
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Log Period',
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w800,
+                                    color: AppTheme.accentPink,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  '🦋',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: NeuContainer(
+                        radius: 20,
+                        onTap: () => Navigator.pop(context),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                            child: Text(
+                              'Log Symptom',
+                              style: GoogleFonts.inter(
+                                fontWeight: FontWeight.w800,
+                                color: AppTheme.textDark,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -901,84 +974,14 @@ class _DailyLogSheet extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
 
-            const SizedBox(height: 24),
-            Text(
-              'This is an estimate based on your cycle patterns.',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                color: AppTheme.textSecondary.withValues(alpha: 0.6),
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 32),
-
-            // Action Buttons
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: NeuContainer(
-                      radius: 20,
-                      onTap: () {
-                        showPhaseDelight(context, 'Period Logged');
-                        Navigator.pop(context);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Log Period',
-                                style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.w800,
-                                  color: AppTheme.accentPink,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              const Text('🦋', style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: NeuContainer(
-                      radius: 20,
-                      onTap: () => Navigator.pop(context),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Center(
-                          child: Text(
-                            'Log Symptom',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w800,
-                              color: AppTheme.textDark,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 48),
-          ],
+              const SizedBox(height: 48),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _hormoneMiniItem(String label, String status) {
     return Column(

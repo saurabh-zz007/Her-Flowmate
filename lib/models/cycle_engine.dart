@@ -57,7 +57,11 @@ class CycleEngine {
   }
 
   /// Estimates the current cycle phase for any specific date.
-  static CyclePhase getPhaseForDate(DateTime date, List<PeriodLog> logs, int avgCycleLen) {
+  static CyclePhase getPhaseForDate(
+    DateTime date,
+    List<PeriodLog> logs,
+    int avgCycleLen,
+  ) {
     if (logs.isEmpty) return CyclePhase.unknown;
 
     // Find the relevant period start for this date
@@ -74,7 +78,11 @@ class CycleEngine {
     if (periodStart == null) return CyclePhase.unknown;
 
     final normDate = DateTime(date.year, date.month, date.day);
-    final normStart = DateTime(periodStart.year, periodStart.month, periodStart.day);
+    final normStart = DateTime(
+      periodStart.year,
+      periodStart.month,
+      periodStart.day,
+    );
     final daysSinceStart = normDate.difference(normStart).inDays;
 
     if (daysSinceStart < 0) return CyclePhase.unknown;
@@ -82,7 +90,11 @@ class CycleEngine {
     // Menstrual phase check
     bool isBleeding;
     if (relevantLog!.endDate != null) {
-      final normEnd = DateTime(relevantLog.endDate!.year, relevantLog.endDate!.month, relevantLog.endDate!.day);
+      final normEnd = DateTime(
+        relevantLog.endDate!.year,
+        relevantLog.endDate!.month,
+        relevantLog.endDate!.day,
+      );
       isBleeding = !normDate.isAfter(normEnd);
     } else {
       isBleeding = daysSinceStart < relevantLog.duration;
@@ -110,7 +122,9 @@ class CycleEngine {
     } else {
       double lutealDay = (day - ovulationDay).toDouble();
       double lutealLen = (cycleLen - ovulationDay).toDouble();
-      estrogen = 0.3 + 0.4 * (1.0 - (lutealDay - (lutealLen / 2)).abs() / (lutealLen / 2));
+      estrogen =
+          0.3 +
+          0.4 * (1.0 - (lutealDay - (lutealLen / 2)).abs() / (lutealLen / 2));
     }
 
     // Progesterone
@@ -118,7 +132,9 @@ class CycleEngine {
     if (day > ovulationDay) {
       double lutealDay = (day - ovulationDay).toDouble();
       double lutealLen = (cycleLen - ovulationDay).toDouble();
-      progesterone = 0.1 + 0.8 * (1.0 - (lutealDay - (lutealLen / 2)).abs() / (lutealLen / 2));
+      progesterone =
+          0.1 +
+          0.8 * (1.0 - (lutealDay - (lutealLen / 2)).abs() / (lutealLen / 2));
     }
 
     // LH
@@ -143,27 +159,43 @@ class CycleEngine {
   }
 
   /// Calculates conception chance for a specific date.
-  static int calculateConceptionChance(DateTime date, List<PeriodLog> logs, int avgCycleLen) {
+  static int calculateConceptionChance(
+    DateTime date,
+    List<PeriodLog> logs,
+    int avgCycleLen,
+  ) {
     if (logs.isEmpty) return 1;
 
     final latestPeriod = logs.first;
     final ovulationDay = avgCycleLen - 14;
 
     final normSearch = DateTime(date.year, date.month, date.day);
-    final normStart = DateTime(latestPeriod.startDate.year, latestPeriod.startDate.month, latestPeriod.startDate.day);
+    final normStart = DateTime(
+      latestPeriod.startDate.year,
+      latestPeriod.startDate.month,
+      latestPeriod.startDate.day,
+    );
 
     final daysSinceStart = normSearch.difference(normStart).inDays;
     final diff = daysSinceStart - ovulationDay + 1;
 
     switch (diff) {
-      case 0: return 33;
-      case -1: return 31;
-      case -2: return 27;
-      case -3: return 14;
-      case -4: return 16;
-      case -5: return 10;
-      case 1: return 5;
-      default: return 1;
+      case 0:
+        return 33;
+      case -1:
+        return 31;
+      case -2:
+        return 27;
+      case -3:
+        return 14;
+      case -4:
+        return 16;
+      case -5:
+        return 10;
+      case 1:
+        return 5;
+      default:
+        return 1;
     }
   }
 
