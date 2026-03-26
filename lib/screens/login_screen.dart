@@ -7,6 +7,7 @@ import '../services/storage_service.dart';
 import '../widgets/glass_container.dart';
 import 'onboarding_screen.dart';
 import 'main_navigation_screen.dart';
+import '../widgets/brand_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,15 +47,18 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const Spacer(flex: 2),
                 
-                Text(
-                  'Continue to\nHerFlowmate',
-                  style: GoogleFonts.poppins(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.textDark,
-                    height: 1.2,
-                  ),
-                  textAlign: TextAlign.center,
+                Column(
+                  children: [
+                    Text(
+                      'Continue to',
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                    const BrandName(fontSize: 42),
+                  ],
                 ).animate().fadeIn().slideY(begin: -0.2),
                 
                 const SizedBox(height: 64),

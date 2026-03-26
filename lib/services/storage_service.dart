@@ -2,10 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/period_log.dart';
+import '../models/daily_log.dart';
 import 'notification_service.dart';
 
 class StorageService extends ChangeNotifier {
   static const String boxName = 'period_logs';
+  static const String dailyBoxName = 'daily_logs';
   late SharedPreferences _prefs;
 
   Future<void> init() async {
@@ -20,8 +22,14 @@ class StorageService extends ChangeNotifier {
         Hive.registerAdapter(PeriodLogAdapter());
       }
       
-      debugPrint('StorageService: Opening box "$boxName"...');
+      if (!Hive.isAdapterRegistered(1)) {
+        debugPrint('StorageService: Registering DailyLogAdapter...');
+        Hive.registerAdapter(DailyLogAdapter());
+      }
+      
+      debugPrint('StorageService: Opening boxes...');
       await Hive.openBox<PeriodLog>(boxName);
+      await Hive.openBox<DailyLog>(dailyBoxName);
       debugPrint('StorageService: Initialization successful.');
     } catch (e) {
       debugPrint('ERROR IN StorageService.init: $e');
@@ -195,5 +203,42 @@ class StorageService extends ChangeNotifier {
     final logs = _box.values.toList();
     logs.sort((a, b) => b.startDate.compareTo(a.startDate)); // newest first
     return logs;
+  }
+
+  Box<DailyLog> get _dailyBox => Hive.box<DailyLog>(dailyBoxName);
+
+  Future<void> saveDailyLog(DailyLog log) async {
+    // Delete existing log for this day to replace it
+    final existingKey = _dailyBox.keys.firstWhere(
+      (k) {
+        final existing = _dailyBox.get(k);
+        return existing != null && 
+               existing.date.year == log.date.year && 
+               existing.date.month == log.date.month && 
+               existing.date.day == log.date.day;
+      },
+      orElse: () => null,
+    );
+    if (existingKey != null) {
+      await _dailyBox.delete(existingKey);
+    }
+    await _dailyBox.add(log);
+    notifyListeners();
+  }
+
+  DailyLog? getDailyLog(DateTime date) {
+    try {
+      return _dailyBox.values.firstWhere((log) => 
+        log.date.year == date.year && 
+        log.date.month == date.month && 
+        log.date.day == date.day
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  List<DailyLog> getAllDailyLogs() {
+    return _dailyBox.values.toList()..sort((a, b) => b.date.compareTo(a.date));
   }
 }

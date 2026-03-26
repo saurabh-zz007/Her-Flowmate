@@ -7,6 +7,7 @@ import '../utils/app_theme.dart';
 import 'login_screen.dart';
 import '../widgets/delight_widgets.dart';
 import '../widgets/glass_container.dart';
+import '../widgets/brand_widgets.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -30,35 +31,17 @@ class WelcomeScreen extends StatelessWidget {
                     
                     // Top area: Glowing Logo
                     Center(
-                      child: GlassContainer(
-                        radius: 50,
-                        opacity: 0.15,
-                        borderColor: AppTheme.accentPink.withOpacity(0.5),
-                        child: Padding(
-                          padding: const EdgeInsets.all(32),
-                          child: const Icon(
-                            Icons.favorite_rounded,
-                            color: AppTheme.accentPink,
-                            size: 64,
-                          ),
-                        ),
-                      ).animate(onPlay: (controller) => controller.repeat(reverse: true))
-                       .shimmer(duration: 2.seconds, color: Colors.white24)
-                       .scale(begin: const Offset(1, 1), end: const Offset(1.05, 1.05), duration: 2.seconds, curve: Curves.easeInOut),
+                      child: const BrandLogo(size: 100)
+                        .animate(onPlay: (controller) => controller.repeat(reverse: true))
+                        .shimmer(duration: 2.seconds, color: Colors.white24)
+                        .scale(begin: const Offset(1, 1), end: const Offset(1.05, 1.05), duration: 2.seconds, curve: Curves.easeInOut),
                     ),
                     
                     const SizedBox(height: 48),
                     
                     // Center area: App Name & Subtext
-                    Text(
-                      'HerFlowmate',
-                      style: GoogleFonts.poppins(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textDark,
-                        letterSpacing: -1,
-                      ),
-                    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, curve: Curves.easeOutBack),
+                    const BrandName(fontSize: 40)
+                      .animate().fadeIn(duration: 800.ms).slideY(begin: 0.2, curve: Curves.easeOutBack),
                     
                     const SizedBox(height: 12),
                     

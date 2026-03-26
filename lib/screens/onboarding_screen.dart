@@ -8,6 +8,7 @@ import '../models/period_log.dart';
 import '../services/storage_service.dart';
 import '../utils/app_theme.dart';
 import '../widgets/glass_container.dart';
+import '../widgets/brand_widgets.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final bool isEmailUser;
@@ -222,13 +223,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 20),
-          Text(
-            "How would you like to use HerFlowmate?",
-            style: GoogleFonts.poppins(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: AppTheme.textDark,
-                height: 1.2),
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: "How would you like to use ",
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: AppTheme.textDark,
+                    height: 1.2,
+                  ),
+                ),
+                const WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: BrandName(fontSize: 28),
+                ),
+                TextSpan(
+                  text: "?",
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: AppTheme.textDark,
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
           ).animate().fadeIn().slideY(begin: 0.1),
           const SizedBox(height: 32),
           _modePanel(
@@ -311,9 +332,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.w800, color: AppTheme.textDark, height: 1.1),
           ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1),
           const SizedBox(height: 12),
-          Text(
-            "This helps HerFlowmate tailor your experience perfectly.",
-            style: GoogleFonts.inter(fontSize: 16, color: AppTheme.textSecondary, height: 1.5, fontWeight: FontWeight.w500),
+          Text.rich(
+            TextSpan(
+              children: [
+                const TextSpan(text: "This helps "),
+                const WidgetSpan(
+                  alignment: PlaceholderAlignment.middle,
+                  child: BrandName(fontSize: 18),
+                ),
+                const TextSpan(text: " tailor your experience perfectly."),
+              ],
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                color: AppTheme.textSecondary,
+                height: 1.5,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ).animate().fadeIn(delay: 400.ms),
           const SizedBox(height: 48),
           _setupInput("WHAT'S YOUR NAME?", _nameController, 'Enter name...', isRequired: true),

@@ -9,6 +9,7 @@ import '../utils/app_theme.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/info_widgets.dart';
 import '../widgets/cycle_widgets.dart';
+import '../widgets/educational_widgets.dart';
 
 import 'log_period_screen.dart';
 
@@ -50,18 +51,22 @@ class _HomeScreenState extends State<HomeScreen> {
     
     return Scaffold(
       backgroundColor: AppTheme.frameColor,
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.bgGradient),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 32),
-                _GreetingSection(storage: storage),
-                const SizedBox(height: 32),
+      body: Stack(
+        children: [
+          Container(decoration: const BoxDecoration(gradient: AppTheme.bgGradient)),
+          _buildDreamyBackground(),
+          SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16),
+                  _buildTopModeToggle(storage),
+                  const SizedBox(height: 24),
+                  _GreetingSection(storage: storage),
+                  const SizedBox(height: 32),
                 
                 if (storage.userGoal == 'pregnant')
                   _buildPregnancyDashboard(context, storage)
@@ -70,11 +75,104 @@ class _HomeScreenState extends State<HomeScreen> {
                 else
                   _buildCycleDashboard(context, storage, pred),
                   
+                const SizedBox(height: 24),
+                _buildEducationalCard(context),
+                  
                 const SizedBox(height: 32),
                 _buildMedicalDisclaimer(),
                 const SizedBox(height: 120),
               ],
             ),
+          ),
+        ),
+      ],
+    ),
+    );
+  }
+
+  Widget _buildDreamyBackground() {
+    return Stack(
+      children: [
+        Positioned(
+          top: -50,
+          left: -50,
+          child: Container(
+            width: 300, height: 300,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppTheme.accentPink.withOpacity(0.15),
+              boxShadow: [BoxShadow(color: AppTheme.accentPink.withOpacity(0.15), blurRadius: 90, spreadRadius: 60)],
+            ),
+          ),
+        ),
+        Positioned(
+          top: 200,
+          right: -100,
+          child: Container(
+            width: 350, height: 350,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withOpacity(0.4),
+              boxShadow: [BoxShadow(color: Colors.white.withOpacity(0.4), blurRadius: 100, spreadRadius: 70)],
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -50,
+          left: 50,
+          child: Container(
+            width: 250, height: 250,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: const Color(0xFFBA68C8).withOpacity(0.1),
+              boxShadow: [BoxShadow(color: const Color(0xFFBA68C8).withOpacity(0.1), blurRadius: 80, spreadRadius: 40)],
+            ),
+          ),
+        ),
+      ],
+    ).animate().fadeIn(duration: 2.seconds);
+  }
+
+  Widget _buildTopModeToggle(StorageService storage) {
+    final mode = storage.userGoal;
+    return GlassContainer(
+      radius: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _modeButton('Normal Tracking', 'tracking', mode, storage),
+          _modeButton('Conceive', 'conceive', mode, storage),
+          _modeButton('Pregnancy', 'pregnant', mode, storage),
+        ],
+      ),
+    );
+  }
+
+  Widget _modeButton(String title, String value, String currentMode, StorageService storage) {
+    final isSelected = currentMode == value;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          storage.updateUserGoal(value);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? AppTheme.accentPink : Colors.transparent,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: isSelected ? [BoxShadow(color: AppTheme.accentPink.withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))] : [],
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+              color: isSelected ? Colors.white : AppTheme.textSecondary,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
       ),
@@ -92,8 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        _buildPhaseCard(context, pred),
-        const SizedBox(height: 24),
+        _buildFloralRingDashboard(context, pred),
+        const SizedBox(height: 32),
         CycleTimeline(
           currentDay: cycleDay,
           cycleLength: cycleLen,
@@ -195,56 +293,79 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPhaseCard(BuildContext context, PredictionService pred) {
+  Widget _buildFloralRingDashboard(BuildContext context, PredictionService pred) {
     final phaseName = pred.phaseDisplayName;
-    final day = pred.currentCycleDay;
-    final hormoneStatus = pred.getHormoneDescriptions(day);
+    final day = pred.currentCycleDay == 0 ? 1 : pred.currentCycleDay;
+    final cycleLen = pred.averageCycleLength;
+    final nextPeriod = pred.daysUntilNextPeriod;
+    final nextOvulation = pred.nextPeriodDate?.subtract(const Duration(days: 14)).difference(DateTime.now()).inDays ?? 14;
 
-    return GlassContainer(
-      padding: const EdgeInsets.all(28),
-      radius: 32,
-      borderColor: AppTheme.phaseColor(phaseName).withOpacity(0.3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text('Current Phase', style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-              const SizedBox(width: 8),
-              GlassInfoButton(
-                onTap: () => showGlassInfoPopup(
-                  context,
-                  title: 'Cycle Phases',
-                  explanation: 'Your cycle consists of four main phases: Menstrual, Follicular, Ovulation, and Luteal.',
-                  tip: 'Each phase brings unique hormonal changes affecting your energy and mood.',
+    return Center(
+      child: SizedBox(
+        width: 330,
+        height: 330,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Outer Ring Progress
+            SizedBox(
+              width: 320,
+              height: 320,
+              child: CustomPaint(
+                painter: _CycleRingPainter(
+                  progress: day / (cycleLen == 0 ? 28 : cycleLen),
+                  activeColor: AppTheme.phaseColor(phaseName),
+                  trackColor: Colors.white.withOpacity(0.6),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+            // Inner Glass Circle
+            GlassContainer(
+              width: 290,
+              height: 290,
+              radius: 145, // Perfect circle
+              opacity: 0.5,
+              borderColor: Colors.white.withOpacity(0.8),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(phaseName, style: GoogleFonts.poppins(fontSize: 32, fontWeight: FontWeight.w800, color: AppTheme.textDark)),
-                  Text(AppTheme.phaseTip(phaseName).headline, style: GoogleFonts.inter(fontSize: 16, color: AppTheme.phaseColor(phaseName), fontWeight: FontWeight.w600)),
+                  RichText(
+                    text: TextSpan(
+                      style: GoogleFonts.poppins(color: AppTheme.textDark),
+                      children: [
+                        const TextSpan(text: 'Day ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                        TextSpan(text: '$day', style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w800, height: 1.0)),
+                        TextSpan(text: ' of $cycleLen', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [AppTheme.phaseColor(phaseName).withOpacity(0.6), AppTheme.phaseColor(phaseName)]),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [BoxShadow(color: AppTheme.phaseColor(phaseName).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4))],
+                    ),
+                    child: Text(phaseName + ' Phase', style: GoogleFonts.inter(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(AppTheme.phaseTip(phaseName).headline + ',', style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textDark, fontWeight: FontWeight.w700)),
+                  Text(AppTheme.phaseTip(phaseName).body, style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary), textAlign: TextAlign.center),
+                  const SizedBox(height: 16),
+                  Container(height: 1, width: 220, color: AppTheme.textSecondary.withOpacity(0.2)),
+                  const SizedBox(height: 12),
+                  Text('Next period in: $nextPeriod days', style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textDark, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 4),
+                  Text('Ovulation in: ${nextOvulation > 0 ? nextOvulation : 0} days', style: GoogleFonts.inter(fontSize: 13, color: AppTheme.accentPink, fontWeight: FontWeight.w700)),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('Estrogen: ${hormoneStatus['Estrogen']}', style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                  Text('Progesterone: ${hormoneStatus['Progesterone']}', style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                ],
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
-    ).animate().fadeIn().slideY(begin: 0.1);
+    ).animate().fadeIn(duration: 800.ms).scale(curve: Curves.easeOutBack);
   }
 
   Widget _buildCycleStatusRow(dynamic val1, dynamic val2, {String label1 = 'Cycle Day', String label2 = 'Next Period'}) {
@@ -397,6 +518,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildEducationalCard(BuildContext context) {
+    return GlassContainer(
+      radius: 28,
+      onTap: () => showPeriodColorGuide(context),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppTheme.accentPink.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.water_drop_rounded, color: AppTheme.accentPink, size: 32),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Know your period', style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w800, color: AppTheme.textDark)),
+                  const SizedBox(height: 4),
+                  Text('What does the color of your flow mean?', style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded, color: AppTheme.accentPink),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1);
+  }
+
   Widget _buildHormoneDetailCard(PredictionService pred, int day) {
     final levels = pred.getHormoneLevels(day);
     final descriptions = pred.getHormoneDescriptions(day);
@@ -489,5 +644,47 @@ class _GreetingSection extends StatelessWidget {
         ),
       ],
     ).animate().fadeIn().slideX(begin: -0.05);
+  }
+}
+
+class _CycleRingPainter extends CustomPainter {
+  final double progress;
+  final Color activeColor;
+  final Color trackColor;
+
+  _CycleRingPainter({required this.progress, required this.activeColor, required this.trackColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = size.width / 2 - 8;
+    
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 12
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(center, radius, trackPaint);
+
+    final activePaint = Paint()
+      ..color = activeColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 14
+      ..strokeCap = StrokeCap.round;
+
+    final sweepAngle = 2 * 3.14159265359 * progress;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -3.14159265359 / 2, // Start at top
+      sweepAngle,
+      false,
+      activePaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _CycleRingPainter oldDelegate) {
+    return oldDelegate.progress != progress || oldDelegate.activeColor != activeColor;
   }
 }

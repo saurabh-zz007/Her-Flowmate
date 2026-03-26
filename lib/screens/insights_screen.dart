@@ -3,6 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../services/prediction_service.dart';
+import '../services/storage_service.dart';
+import '../models/period_log.dart';
 import '../utils/app_theme.dart';
 import '../widgets/cycle_phase_wheel.dart';
 import '../widgets/glass_container.dart';
@@ -14,6 +16,8 @@ class InsightsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pred = context.watch<PredictionService>();
+    final storage = context.watch<StorageService>();
+    final logs = storage.getLogs();
 
     final cycleDay = pred.currentCycleDay == 0 ? 1 : pred.currentCycleDay;
     final cycleLen = pred.averageCycleLength > 0 ? pred.averageCycleLength : 28;
@@ -22,24 +26,33 @@ class InsightsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.frameColor,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: GlassContainer(
+              radius: 12,
+              padding: EdgeInsets.zero,
+              child: const Icon(Icons.arrow_back_rounded, color: AppTheme.textDark),
+            ),
+          ),
+        ),
+        title: Text(
+          'Cycle Insights',
+          style: GoogleFonts.poppins(color: AppTheme.textDark, fontWeight: FontWeight.w800, fontSize: 20),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch, // Changed to stretch for charts
             children: [
-              // Header
-              Text(
-                'Cycle Insights',
-                style: GoogleFonts.poppins(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: AppTheme.textDark,
-                ),
-              ),
-              const SizedBox(height: 32),
-
               // Large Phase Wheel
               CyclePhaseWheel(
                 currentCycleDay: cycleDay,
@@ -52,56 +65,31 @@ class InsightsScreen extends StatelessWidget {
               const _DailyInsightCard().animate().fadeIn(delay: 400.ms),
               const SizedBox(height: 32),
 
-              // ── Unified Insights Surface ──────────────────────────────────
-              GlassContainer(
-                padding: const EdgeInsets.all(28),
-                radius: 32,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Cycle Length', 
-                            style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 8),
-                          Text('$cycleLen days', 
-                            style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textDark)),
-                          Text('Avg last 6 cycles', 
-                            style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 1.5,
-                      height: 50,
-                      color: Colors.white.withOpacity(0.2),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Fertile Window', 
-                            style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 8),
-                          Text('6 days', 
-                            style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textDark)),
-                          Text(pred.currentPhase == CyclePhase.ovulation ? 'Peak today' : 'Upcoming', 
-                            style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              // Scores Row
+              Row(
+                children: [
+                  Expanded(child: _buildScoreCard('Avg Cycle', '${pred.averageCycleLength}d', Icons.sync_rounded)),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildScoreCard('Avg Period', '${_getAveragePeriodLength(logs)}d', Icons.water_drop_rounded)),
+                ],
               ).animate().fadeIn(delay: 500.ms, duration: 600.ms).slideY(begin: 0.1),
 
               const SizedBox(height: 32),
 
               // Data Visualizations
-              _buildSymptomFrequencyChart(),
+              Text('Cycle History', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textDark)).animate().fadeIn(delay: 550.ms),
+              const SizedBox(height: 16),
+              _buildCycleChart(logs).animate().fadeIn(delay: 600.ms).slideY(begin: 0.1),
+              
               const SizedBox(height: 32),
-              _buildHeatmap(),
+              
+              _buildFlowmateScore(pred).animate().fadeIn(delay: 650.ms).slideY(begin: 0.1),
+
+              const SizedBox(height: 32),
+              
+              Text('Symptom Frequency', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textDark)).animate().fadeIn(delay: 700.ms),
+              const SizedBox(height: 16),
+              _buildSymptomStats(logs).animate().fadeIn(delay: 750.ms).slideY(begin: 0.1),
 
               const SizedBox(height: 120),
             ],
@@ -111,135 +99,232 @@ class InsightsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSymptomFrequencyChart() {
+  int _getAveragePeriodLength(List<PeriodLog> logs) {
+    if (logs.isEmpty) return 5;
+    int total = 0;
+    for (var log in logs) {
+      total += log.duration;
+    }
+    return (total / logs.length).round();
+  }
+
+  Widget _buildScoreCard(String title, String value, IconData icon) {
     return GlassContainer(
       radius: 28,
       padding: const EdgeInsets.all(24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Symptom Frequency',
-            style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textDark),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: AppTheme.accentPink.withOpacity(0.1), shape: BoxShape.circle),
+            child: Icon(icon, color: AppTheme.accentPink, size: 24),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Logged over the last 3 cycles',
-            style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 32),
-          SizedBox(
-            height: 200,
-            child: BarChart(
-              BarChartData(
-                alignment: BarChartAlignment.spaceAround,
-                maxY: 10,
-                barTouchData: BarTouchData(enabled: false),
-                titlesData: FlTitlesData(
-                  show: true,
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (val, meta) {
-                        final style = TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.bold, fontSize: 12);
-                        String text = '';
-                        switch (val.toInt()) {
-                          case 0: text = 'Cramps'; break;
-                          case 1: text = 'Fatigue'; break;
-                          case 2: text = 'Bloat'; break;
-                          case 3: text = 'Acne'; break;
-                          case 4: text = 'Mood'; break;
-                        }
-                        return Padding(padding: const EdgeInsets.only(top: 8.0), child: Text(text, style: style));
-                      },
-                    ),
-                  ),
-                  leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                ),
-                gridData: const FlGridData(show: false),
-                borderData: FlBorderData(show: false),
-                barGroups: [
-                  _buildBarGroup(0, 8, AppTheme.accentPink),
-                  _buildBarGroup(1, 6, AppTheme.accentPurple),
-                  _buildBarGroup(2, 4, AppTheme.accentCyan),
-                  _buildBarGroup(3, 3, AppTheme.neonGreen),
-                  _buildBarGroup(4, 5, AppTheme.textSecondary),
-                ],
-              ),
-            ),
-          ),
+          const SizedBox(height: 16),
+          Text(value, style: GoogleFonts.poppins(fontSize: 26, fontWeight: FontWeight.w800, color: AppTheme.textDark)),
+          Text(title, style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
         ],
       ),
-    ).animate().fadeIn(duration: 600.ms, delay: 200.ms).slideY(begin: 0.1);
-  }
-
-  BarChartGroupData _buildBarGroup(int x, double y, Color color) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y,
-          color: color,
-          width: 18,
-          borderRadius: BorderRadius.circular(6),
-          backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            toY: 10,
-            color: AppTheme.shadowDark.withOpacity(0.3),
-          ),
-        ),
-      ],
     );
   }
 
-  Widget _buildHeatmap() {
+  Widget _buildFlowmateScore(PredictionService pred) {
+    final isRegular = !pred.isIrregularCycle;
+    final score = isRegular ? 95 : 72;
+    
     return GlassContainer(
-      padding: const EdgeInsets.all(24),
       radius: 28,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      padding: const EdgeInsets.all(24),
+      borderColor: AppTheme.accentPink.withOpacity(0.3),
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Cramps Intensity',
-                style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textDark),
-              ),
-              const Icon(Icons.show_chart_rounded, color: AppTheme.accentPink),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(14, (index) {
-              double intensity = 0;
-              if (index > 2 && index < 7) intensity = (index == 4 || index == 5) ? 1.0 : 0.6;
-              else if (index == 2 || index == 7) intensity = 0.3;
-
-              return Container(
-                width: 14,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: intensity > 0 ? AppTheme.accentPink.withOpacity(intensity) : AppTheme.shadowDark.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(6),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Flowmate Score', style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(
+                  '$score',
+                  style: GoogleFonts.outfit(fontSize: 48, fontWeight: FontWeight.w900, color: AppTheme.textDark, height: 1.0),
                 ),
-              );
-            }),
+                const SizedBox(height: 8),
+                Text(
+                  isRegular ? 'Your cycle is highly regular. Keep logging!' : 'Your cycle shows some variation. This is normal!',
+                  style: GoogleFonts.inter(fontSize: 13, color: AppTheme.textDark, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('2 Weeks Ago', style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-              Text('Today', style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-            ],
+          Container(
+            width: 80, height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppTheme.accentPink.withOpacity(0.1),
+            ),
+            child: Center(
+              child: Icon(isRegular ? Icons.check_circle_rounded : Icons.info_rounded, color: AppTheme.accentPink, size: 40),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCycleChart(List<PeriodLog> logs) {
+    List<int> cycleLengths = [];
+    for (int i = 0; i < logs.length - 1 && cycleLengths.length < 6; i++) {
+      final currentStart = logs[i].startDate;
+      final previousStart = logs[i+1].startDate;
+      final diff = previousStart.difference(currentStart).inDays.abs();
+      if (diff > 15 && diff < 90) cycleLengths.insert(0, diff); // Reverse for chronological order
+    }
+
+    return GlassContainer(
+      radius: 28,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Last Cycles (Days)', style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 32),
+          SizedBox(
+            height: 200,
+            child: cycleLengths.isEmpty 
+                ? Center(child: Text('Log more periods to see chart', style: GoogleFonts.inter(color: AppTheme.textSecondary)))
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      return BarChart(
+                        BarChartData(
+                          alignment: BarChartAlignment.spaceEvenly,
+                          maxY: 40,
+                          minY: 0,
+                          groupsSpace: 12,
+                          barTouchData: BarTouchData(
+                            touchTooltipData: BarTouchTooltipData(
+                              getTooltipColor: (_) => AppTheme.textDark,
+                              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                return BarTooltipItem(
+                                  '${rod.toY.toInt()} days',
+                                  GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold),
+                                );
+                              },
+                            ),
+                          ),
+                          titlesData: FlTitlesData(
+                            show: true,
+                            bottomTitles: AxisTitles(
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                getTitlesWidget: (value, meta) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text('C${value.toInt() + 1}', style: GoogleFonts.inter(color: AppTheme.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
+                                  );
+                                },
+                              ),
+                            ),
+                            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                          ),
+                          gridData: FlGridData(
+                            show: true,
+                            drawVerticalLine: false,
+                            horizontalInterval: 10,
+                            getDrawingHorizontalLine: (value) => FlLine(color: AppTheme.shadowDark.withOpacity(0.2), strokeWidth: 1, dashArray: [4, 4]),
+                          ),
+                          borderData: FlBorderData(show: false),
+                          barGroups: List.generate(cycleLengths.length, (i) {
+                            final val = cycleLengths[i].toDouble();
+                            return BarChartGroupData(
+                              x: i,
+                              barRods: [
+                                BarChartRodData(
+                                  toY: val,
+                                  width: constraints.maxWidth / (cycleLengths.length * 2),
+                                  gradient: AppTheme.brandGradient,
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+                                  backDrawRodData: BackgroundBarChartRodData(
+                                    show: true,
+                                    toY: 40,
+                                    color: AppTheme.shadowDark.withOpacity(0.3),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
+                        swapAnimationDuration: 800.ms,
+                        swapAnimationCurve: Curves.easeOutCubic,
+                      );
+                    }
+                  ),
           ),
         ],
       ),
-    ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(begin: 0.1);
+    );
+  }
+
+  Widget _buildSymptomStats(List<PeriodLog> logs) {
+    Map<String, int> counts = {};
+    for (var log in logs) {
+      if (log.symptoms != null) {
+        for (var sym in log.symptoms!) {
+          counts[sym] = (counts[sym] ?? 0) + 1;
+        }
+      }
+    }
+
+    if (counts.isEmpty) {
+      return GlassContainer(
+        radius: 28,
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: Text('Log symptoms to see frequency.', style: GoogleFonts.inter(color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
+        ),
+      );
+    }
+
+    var entries = counts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    int total = counts.values.fold(0, (sum, val) => sum + val);
+
+    return GlassContainer(
+      radius: 28,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: entries.take(5).map((entry) {
+          final pct = entry.value / total;
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(entry.key, style: GoogleFonts.inter(fontSize: 14, color: AppTheme.textDark, fontWeight: FontWeight.w600)),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Container(
+                    height: 8,
+                    decoration: BoxDecoration(color: AppTheme.shadowDark.withOpacity(0.3), borderRadius: BorderRadius.circular(4)),
+                    child: FractionallySizedBox(
+                      alignment: Alignment.centerLeft,
+                      widthFactor: pct,
+                      child: Container(
+                        decoration: BoxDecoration(color: AppTheme.accentPink, borderRadius: BorderRadius.circular(4)),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text('${(pct * 100).round()}%', style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w700)),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 }
 

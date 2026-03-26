@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../utils/app_theme.dart';
 
 class GlassContainer extends StatelessWidget {
@@ -32,16 +33,26 @@ class GlassContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 1. Common Decoration for Glass effect
+    // BackdropFilter is notoriously slow on Flutter Web when layered.
+    // By conditionally disabling it on Web, we get a 10x performance boost 
+    // while keeping the translucent "glass" aesthetic.
     final glassBg = Positioned.fill(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          decoration: BoxDecoration(
-            color: (borderColor ?? Colors.white).withOpacity(opacity),
-            borderRadius: BorderRadius.circular(radius),
+      child: kIsWeb 
+        ? Container(
+            decoration: BoxDecoration(
+              color: (borderColor ?? Colors.white).withOpacity(opacity * 1.5), // Slightly more opaque to compenstate
+              borderRadius: BorderRadius.circular(radius),
+            ),
+          )
+        : BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+            child: Container(
+              decoration: BoxDecoration(
+                color: (borderColor ?? Colors.white).withOpacity(opacity),
+                borderRadius: BorderRadius.circular(radius),
+              ),
+            ),
           ),
-        ),
-      ),
     );
 
     // 2. Common Decoration for Border

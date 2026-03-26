@@ -8,6 +8,7 @@ import 'login_screen.dart';
 import 'home_screen.dart';
 import 'insights_screen.dart';
 import 'log_period_screen.dart';
+import 'daily_checkin_screen.dart';
 import 'calendar_screen.dart';
 import 'feedback_screen.dart';
 import 'history_screen.dart';
@@ -78,9 +79,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               onTap: () {
                 showModalBottomSheet(
                   context: context,
-                  isScrollControlled: true,
                   backgroundColor: Colors.transparent,
-                  builder: (context) => const LogPeriodScreen(),
+                  builder: (context) => _buildAddMenu(context),
                 );
               },
               child: GlassContainer(
@@ -91,6 +91,85 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               ),
             ).animate().scale(duration: 400.ms, curve: Curves.easeOutBack)
           : null,
+    );
+  }
+
+  Widget _buildAddMenu(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.frameColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child: Container(
+                width: 48,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const LogPeriodScreen(),
+                );
+              },
+              child: GlassContainer(
+                padding: const EdgeInsets.all(20),
+                radius: 24,
+                child: Row(
+                  children: [
+                    const Text('🩸', style: TextStyle(fontSize: 24)),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Log Period',
+                      style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark),
+                    ),
+                  ],
+                ),
+              ),
+            ).animate().slideY(begin: 0.1, duration: 200.ms),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const DailyCheckinScreen(),
+                );
+              },
+              child: GlassContainer(
+                padding: const EdgeInsets.all(20),
+                radius: 24,
+                child: Row(
+                  children: [
+                    const Text('📝', style: TextStyle(fontSize: 24)),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Daily Check-in',
+                      style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textDark),
+                    ),
+                  ],
+                ),
+              ),
+            ).animate().slideY(begin: 0.1, delay: 100.ms, duration: 200.ms),
+          ],
+        ),
+      ),
     );
   }
 

@@ -11,6 +11,9 @@ import '../widgets/glass_container.dart';
 import '../widgets/delight_widgets.dart';
 import '../widgets/notification_widgets.dart';
 import 'prediction_details_screen.dart';
+import '../widgets/brand_widgets.dart';
+import 'insights_screen.dart';
+
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -362,7 +365,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   const SizedBox(height: 12),
                   _drawerActionItem(context, icon: Icons.calendar_month_rounded, title: 'Calendar', onTap: () => Navigator.pop(context)),
                   const SizedBox(height: 12),
-                  _drawerActionItem(context, icon: Icons.lightbulb_rounded, title: 'Insights', onTap: () => Navigator.popUntil(context, (r) => r.isFirst)),
+                  _drawerActionItem(context, icon: Icons.lightbulb_rounded, title: 'Insights', onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const InsightsScreen()));
+                  }),
                   
                   const SizedBox(height: 24),
                   Divider(color: AppTheme.shadowDark.withOpacity(0.3)),
@@ -377,9 +383,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
             
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
-              child: Text(
-                'HerFlowmate v1.2.0',
-                style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const BrandName(fontSize: 14),
+                  Text(
+                    ' v1.2.0',
+                    style: GoogleFonts.inter(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500),
+                  ),
+                ],
               ),
             ),
           ],

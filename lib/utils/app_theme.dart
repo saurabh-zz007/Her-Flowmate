@@ -31,6 +31,15 @@ abstract final class AppTheme {
     colors: [bgColor, Color(0xFFFAEBEF)],
   );
 
+  static const LinearGradient brandGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFE88BA3), // accentPink
+      Color(0xFFBA68C8), // accentPurple
+    ],
+  );
+
   static const Map<String, Color> phaseColors = {
     'Menstrual':  Color(0xFFD81B60), // Deep Pink
     'Follicular': Color(0xFFFFCCBC), // Soft Peach

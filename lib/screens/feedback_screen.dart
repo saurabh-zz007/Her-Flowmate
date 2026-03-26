@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../utils/app_theme.dart';
 import '../widgets/glass_container.dart';
+import '../widgets/brand_widgets.dart';
 
 class FeedbackScreen extends StatefulWidget {
   const FeedbackScreen({super.key});
@@ -112,12 +113,21 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 
                 const SizedBox(height: 12),
                 
-                Text(
-                  'Feature requests, bugs, or kindness — let us know how we can improve HerFlowmate.',
-                  style: GoogleFonts.inter(
-                      fontSize: 16,
-                      color: AppTheme.textDark.withOpacity(0.6),
-                      height: 1.5),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      const TextSpan(text: 'Feature requests, bugs, or kindness — let us know how we can improve '),
+                      const WidgetSpan(
+                        alignment: PlaceholderAlignment.middle,
+                        child: BrandName(fontSize: 16),
+                      ),
+                      const TextSpan(text: '.'),
+                    ],
+                    style: GoogleFonts.inter(
+                        fontSize: 16,
+                        color: AppTheme.textDark.withOpacity(0.6),
+                        height: 1.5),
+                  ),
                   textAlign: TextAlign.center,
                 ).animate().fadeIn(delay: 300.ms),
                 
