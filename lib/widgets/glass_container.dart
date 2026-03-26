@@ -40,9 +40,9 @@ class GlassContainer extends StatelessWidget {
       child: kIsWeb
           ? Container(
               decoration: BoxDecoration(
-                color: (borderColor ?? Colors.white).withOpacity(
-                  opacity * 1.5,
-                ), // Slightly more opaque to compenstate
+                color: (borderColor ?? Colors.white).withValues(
+                  alpha: opacity * 1.5,
+                ), // Slightly more opaque to compensate
                 borderRadius: BorderRadius.circular(radius),
               ),
             )

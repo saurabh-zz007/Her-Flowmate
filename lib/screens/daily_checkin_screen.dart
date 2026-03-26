@@ -7,7 +7,6 @@ import '../services/storage_service.dart';
 import '../models/daily_log.dart';
 import '../utils/app_theme.dart';
 import '../widgets/neu_container.dart';
-import '../widgets/delight_widgets.dart';
 
 class DailyCheckinScreen extends StatefulWidget {
   const DailyCheckinScreen({super.key});
@@ -352,8 +351,8 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                             boxShadow: isSel
                                 ? [
                                     BoxShadow(
-                                      color: AppTheme.accentPink.withOpacity(
-                                        0.3,
+                                      color: AppTheme.accentPink.withValues(
+                                        alpha: 0.3,
                                       ),
                                       blurRadius: 10,
                                       offset: const Offset(0, 4),
