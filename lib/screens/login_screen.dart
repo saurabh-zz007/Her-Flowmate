@@ -118,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Container(
                               padding: const EdgeInsets.all(24),
                               decoration: AppTheme.glassDecoration(
+                                borderColor: Colors.white,
                                 radius: 28,
                                 opacity: 0.08,
                               ),
