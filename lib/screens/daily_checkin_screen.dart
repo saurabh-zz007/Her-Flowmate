@@ -24,7 +24,7 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
   final List<String> _selectedActivities = [];
   final TextEditingController _notesController = TextEditingController();
 
-  final List<String> _allSymptoms = [
+  final List<String> _standardSymptoms = [
     'Cramps',
     'Headache',
     'Bloating',
@@ -32,6 +32,19 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
     'Backache',
     'Tender Breasts',
     'Nausea',
+    'Fatigue',
+    'Cravings',
+  ];
+
+  final List<String> _pregnancySymptoms = [
+    'Morning Sickness',
+    'Heartburn',
+    'Back Pain',
+    'Swollen Feet',
+    'Frequent Urination',
+    'Ligament Pain',
+    'Breast Changes',
+    'Dizziness',
     'Fatigue',
     'Cravings',
   ];
@@ -280,110 +293,129 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                   // ── Symptoms ────────────────────────────────────────────
                   _stepLabel('🤒', 'Symptoms'),
                   const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: _allSymptoms.map((sym) {
-                      final isSel = _selectedSymptoms.contains(sym);
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isSel
-                                ? _selectedSymptoms.remove(sym)
-                                : _selectedSymptoms.add(sym);
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSel
-                                ? const Color(0xFFBA68C8)
-                                : Colors.white.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: isSel
-                                ? [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xFFBA68C8,
-                                      ).withValues(alpha: 0.3),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ]
-                                : [],
-                          ),
-                          child: Text(
-                            sym,
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: isSel
-                                  ? FontWeight.bold
-                                  : FontWeight.w600,
-                              color: isSel
-                                  ? Colors.white
-                                  : AppTheme.textSecondary,
+                  Builder(
+                    builder: (context) {
+                      final isPregnant = context.read<StorageService>().userGoal == 'pregnant';
+                      final symptoms = isPregnant ? _pregnancySymptoms : _standardSymptoms;
+                      return Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: symptoms.map((sym) {
+                          final isSel = _selectedSymptoms.contains(sym);
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isSel
+                                    ? _selectedSymptoms.remove(sym)
+                                    : _selectedSymptoms.add(sym);
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSel
+                                    ? const Color(0xFFBA68C8)
+                                    : Colors.white.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: isSel
+                                    ? [
+                                        BoxShadow(
+                                          color: const Color(
+                                            0xFFBA68C8,
+                                          ).withValues(alpha: 0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ]
+                                    : [],
+                              ),
+                              child: Text(
+                                sym,
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: isSel
+                                      ? FontWeight.bold
+                                      : FontWeight.w600,
+                                  color: isSel
+                                      ? Colors.white
+                                      : AppTheme.textSecondary,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        }).toList(),
                       );
-                    }).toList(),
+                    },
                   ).animate().fadeIn(delay: 400.ms),
 
                   const SizedBox(height: 32),
 
-                  // ── Flow Intensity ─────────────────────────────────────────
-                  _stepLabel('🩸', 'Flow Intensity'),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: _allFlows.map((flowStr) {
-                      final isSel = _selectedFlow == flowStr;
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _selectedFlow = flowStr),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: EdgeInsets.only(
-                              right: flowStr == _allFlows.last ? 0 : 12,
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            decoration: BoxDecoration(
-                              color: isSel
-                                  ? AppTheme.accentPink
-                                  : Colors.white.withValues(alpha: 0.5),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: isSel
-                                  ? [
-                                      BoxShadow(
-                                        color: AppTheme.accentPink.withValues(
-                                          alpha: 0.3,
-                                        ),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
+                  // ── Flow Intensity (Only if not pregnant) ──────────────────
+                  Builder(
+                    builder: (context) {
+                      final isPregnant = context.read<StorageService>().userGoal == 'pregnant';
+                      if (isPregnant) return const SizedBox.shrink();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _stepLabel('🩸', 'Flow Intensity'),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: _allFlows.map((flowStr) {
+                              final isSel = _selectedFlow == flowStr;
+                              return Expanded(
+                                child: GestureDetector(
+                                  onTap: () => setState(() => _selectedFlow = flowStr),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    margin: EdgeInsets.only(
+                                      right: flowStr == _allFlows.last ? 0 : 12,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    decoration: BoxDecoration(
+                                      color: isSel
+                                          ? AppTheme.accentPink
+                                          : Colors.white.withValues(alpha: 0.5),
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: isSel
+                                          ? [
+                                              BoxShadow(
+                                                color: AppTheme.accentPink.withValues(
+                                                  alpha: 0.3,
+                                                ),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ]
+                                          : [],
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      flowStr,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 14,
+                                        fontWeight: isSel
+                                            ? FontWeight.bold
+                                            : FontWeight.w600,
+                                        color: isSel
+                                            ? Colors.white
+                                            : AppTheme.textSecondary,
                                       ),
-                                    ]
-                                  : [],
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              flowStr,
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: isSel
-                                    ? FontWeight.bold
-                                    : FontWeight.w600,
-                                color: isSel
-                                    ? Colors.white
-                                    : AppTheme.textSecondary,
-                              ),
-                            ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
-                        ),
+                          const SizedBox(height: 32),
+                        ],
                       );
-                    }).toList(),
+                    },
                   ).animate().fadeIn(delay: 450.ms),
 
                   const SizedBox(height: 32),
@@ -535,7 +567,31 @@ class _DailyCheckinScreenState extends State<DailyCheckinScreen> {
                       );
 
                       await context.read<StorageService>().saveDailyLog(log);
-                      if (mounted) Navigator.pop(context);
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Row(
+                              children: [
+                                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'Check-in saved! 🌸',
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            backgroundColor: const Color(0xFF4CAF50),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            margin: const EdgeInsets.all(16),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                        Navigator.pop(context);
+                      }
                     },
                     child: Container(
                       height: 60,

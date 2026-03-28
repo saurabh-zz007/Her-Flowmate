@@ -54,15 +54,18 @@ class StorageService extends ChangeNotifier {
   bool get isMinimalMode => _prefs.getBool('isMinimalMode') ?? false;
   // Pregnancy data
   DateTime? get dueDate {
+    // Priority 1: Explicit due date set directly by user
     final ms = _prefs.getInt('dueDate');
     if (ms != null) return DateTime.fromMillisecondsSinceEpoch(ms);
-    // Auto-calculate from conceptionDate if available
+    // Priority 2: Conception date + 266 days (38 weeks)
     final cDate = conceptionDate;
-    if (cDate != null) return cDate.add(const Duration(days: 280));
+    if (cDate != null) return cDate.add(const Duration(days: 266));
+    // Priority 3: Derive from weeks remaining (pregnancyWeeks stores weeks elapsed)
     final pWeeks = pregnancyWeeks;
     if (pWeeks != null) {
-      // 40 weeks total - current weeks = remaining
-      return DateTime.now().add(Duration(days: (40 - pWeeks) * 7));
+      // pWeeks = weeks already elapsed; remaining = 40 - pWeeks
+      final remaining = (40 - pWeeks).clamp(0, 40);
+      return DateTime.now().add(Duration(days: remaining * 7));
     }
     return null;
   }
@@ -78,12 +81,19 @@ class StorageService extends ChangeNotifier {
 
   Future<void> savePregnancyData({DateTime? conceptionDate, int? weeks}) async {
     if (conceptionDate != null) {
+      // The user selected an explicit date (now representing LMP).
       await _prefs.setInt(
         'conceptionDate',
         conceptionDate.millisecondsSinceEpoch,
       );
-    }
-    if (weeks != null) {
+      await _prefs.remove('pregnancyWeeks'); // Clear stale weeks
+    } else if (weeks != null && weeks > 0) {
+      // Convert weeks-elapsed to conception date (LMP) so counter advances daily
+      final derivedConception = DateTime.now().subtract(Duration(days: weeks * 7));
+      await _prefs.setInt(
+        'conceptionDate',
+        derivedConception.millisecondsSinceEpoch,
+      );
       await _prefs.setInt('pregnancyWeeks', weeks);
     }
     notifyListeners();
@@ -209,13 +219,24 @@ class StorageService extends ChangeNotifier {
 
   Future<String> exportLogsToJson() async {
     final logs = getLogs();
-    return logs
-        .map((l) {
-          final start = l.startDate.toIso8601String();
-          final end = l.endDate?.toIso8601String() ?? 'null';
-          return '$start|$end';
-        })
-        .join(',');
+    final list = logs.map((l) => {
+      'startDate': l.startDate.toIso8601String(),
+      'endDate': l.endDate?.toIso8601String(),
+      'duration': l.duration,
+    }).toList();
+    // Simple JSON serialisation without external package
+    final buffer = StringBuffer('[');
+    for (int i = 0; i < list.length; i++) {
+      final m = list[i];
+      buffer.write('{');
+      buffer.write('"startDate":"${m['startDate']}",');
+      buffer.write('"endDate":${m['endDate'] != null ? '"${m['endDate']}"' : 'null'},');
+      buffer.write('"duration":${m['duration']}');
+      buffer.write('}');
+      if (i < list.length - 1) buffer.write(',');
+    }
+    buffer.write(']');
+    return buffer.toString();
   }
 
   Future<void> exportLogsToPdf() async {
@@ -267,7 +288,36 @@ class StorageService extends ChangeNotifier {
     }
   }
 
-  List<DailyLog> getAllDailyLogs() {
-    return _dailyBox.values.toList()..sort((a, b) => b.date.compareTo(a.date));
+  // --- Health Tracker & Dashboard Helpers ---
+
+  int getHydrationToday() {
+    final log = getDailyLog(DateTime.now());
+    return log?.waterIntake ?? 0;
+  }
+
+  int getStepsToday() {
+    // This would normally come from a pedometer service, but we use daily log for now
+    final log = getDailyLog(DateTime.now());
+    final activity = log?.physicalActivity?.firstWhere((a) => a.contains('steps'), orElse: () => '');
+    if (activity != null && activity.isNotEmpty) {
+      final match = RegExp(r'\d+').firstMatch(activity);
+      if (match != null) return int.parse(match.group(0)!);
+    }
+    return 0;
+  }
+
+  double getSleepHours() {
+    // Simple mock until we have a proper sleep tracker
+    return 7.5;
+  }
+
+  String getMoodToday() {
+    final log = getDailyLog(DateTime.now());
+    return log?.moods?.isNotEmpty == true ? log!.moods!.first : 'Good';
+  }
+
+  List<dynamic> getUpcomingAppointments() {
+    // Temporary stub – you can expand this to use a dedicated Box
+    return [];
   }
 }

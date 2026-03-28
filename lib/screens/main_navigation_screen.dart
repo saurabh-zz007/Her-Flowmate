@@ -8,6 +8,8 @@ import 'log_period_screen.dart';
 import 'daily_checkin_screen.dart';
 import 'calendar_screen.dart';
 import 'profile_screen.dart';
+import 'package:provider/provider.dart';
+import '../services/storage_service.dart';
 import '../utils/app_theme.dart';
 import '../widgets/shared_drawer.dart';
 
@@ -110,13 +112,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
             child: const Icon(Icons.add_rounded, size: 32, color: Colors.white),
           ),
-        )
-        .animate(onPlay: (c) => c.repeat(reverse: true))
-        .scale(
-          begin: const Offset(1, 1),
-          end: const Offset(1.05, 1.05),
-          duration: 2.seconds,
-          curve: Curves.easeInOut,
         );
   }
 
@@ -160,13 +155,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   Widget _buildAddMenu(BuildContext context) {
+    final storage = context.read<StorageService>();
+    final isPregnant = storage.userGoal == 'pregnant';
+
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
+      child: Container(
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.8),
+            color: Colors.white.withValues(alpha: 0.95), // High opacity for stability
             borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
             border: Border.all(color: Colors.white, width: 1.5),
           ),
@@ -184,26 +180,61 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                _menuItem(
-                  '🩸',
-                  'Log Period',
-                  'Track your cycle start/end',
-                  0,
-                  () => _openSheet(const LogPeriodScreen()),
-                ),
-                const SizedBox(height: 16),
-                _menuItem(
-                  '📝',
-                  'Daily Check-in',
-                  'Log symptoms and moods',
-                  1,
-                  () => _openSheet(const DailyCheckinScreen()),
-                ),
+                if (isPregnant) ...[
+                  _menuItem(
+                    '📝',
+                    'Daily Check-in',
+                    'Log symptoms and moods',
+                    0,
+                    () => _openSheet(const DailyCheckinScreen()),
+                  ),
+                  const SizedBox(height: 12),
+                  _menuItem(
+                    '👣',
+                    'Kick Counter',
+                    'Track baby\'s movements',
+                    1,
+                    () => _showComingSoon(context, 'Kick Counter'),
+                  ),
+                  const SizedBox(height: 12),
+                  _menuItem(
+                    '⚖️',
+                    'Weight Log',
+                    'Track your pregnancy weight',
+                    2,
+                    () => _showComingSoon(context, 'Weight Log'),
+                  ),
+                ] else ...[
+                  _menuItem(
+                    '🩸',
+                    'Log Period',
+                    'Track your cycle start/end',
+                    0,
+                    () => _openSheet(const LogPeriodScreen()),
+                  ),
+                  const SizedBox(height: 16),
+                  _menuItem(
+                    '📝',
+                    'Daily Check-in',
+                    'Log symptoms and moods',
+                    1,
+                    () => _openSheet(const DailyCheckinScreen()),
+                  ),
+                ],
                 const SizedBox(height: 20),
               ],
-            ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showComingSoon(BuildContext context, String feature) {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$feature feature coming soon! 🚀'),
+        behavior: SnackBarBehavior.floating,
       ),
     );
   }

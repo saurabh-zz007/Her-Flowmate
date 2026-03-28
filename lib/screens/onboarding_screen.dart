@@ -43,6 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late String _selectedGoal;
   DateTime? _lastPeriodStart;
   bool _isAM = true;
+  String _pregnancyInputMode = 'weeks'; // 'weeks' or 'date'
 
   @override
   void initState() {
@@ -89,15 +90,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         return;
       }
     }
-    if (_currentPage == 2 &&
-        _lastPeriodStart == null &&
-        _selectedGoal != 'pregnant') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select your last period start date.'),
-        ),
-      );
-      return;
+    if (_currentPage == 2) {
+      if (_selectedGoal == 'pregnant') {
+        if (_pregnancyInputMode == 'weeks' && _weeksController.text.trim().isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please enter how many weeks pregnant you are.')),
+          );
+          return;
+        }
+        if (_pregnancyInputMode == 'date' && _conceptionDate == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please select your conception date.')),
+          );
+          return;
+        }
+      } else if (_lastPeriodStart == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select your last period start date.')),
+        );
+        return;
+      }
     }
 
     if (_currentPage < _totalPages - 1) {
@@ -131,10 +143,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
 
     if (_selectedGoal == 'pregnant') {
-      final weeks = int.tryParse(_weeksController.text.trim());
+      final w = int.tryParse(_weeksController.text.trim());
       await storage.savePregnancyData(
-        conceptionDate: _conceptionDate,
-        weeks: weeks,
+        conceptionDate: _pregnancyInputMode == 'date' ? _conceptionDate : null,
+        weeks: _pregnancyInputMode == 'weeks' ? w : null,
       );
     } else if (_lastPeriodStart != null) {
       final logDate = DateTime(
@@ -157,7 +169,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedGlowBackground(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppTheme.accentPink.withValues(alpha: 0.05),
+            AppTheme.accentPurple.withValues(alpha: 0.05),
+            Colors.white,
+          ],
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
@@ -537,7 +560,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ── Page 3: First Period ────────────────────────────────────────────────
+  // ── Page 3: First Period / Pregnancy ────────────────────────────────────
   Widget _periodPage() {
     if (_selectedGoal == 'pregnant') {
       return SingleChildScrollView(
@@ -562,33 +585,118 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ).animate().fadeIn(delay: 200.ms),
             const SizedBox(height: 32),
-            _setupInput(
-              "WEEKS PREGNANT",
-              _weeksController,
-              "e.g. 8",
-              isNumeric: true,
-            ),
+            
+            // Toggle
+            Container(
+              decoration: AppTheme.glassDecoration(radius: 16),
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _pregnancyInputMode = 'weeks'),
+                      child: AnimatedContainer(
+                        duration: 300.ms,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: _pregnancyInputMode == 'weeks'
+                              ? AppTheme.accentPink
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Weeks',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold,
+                              color: _pregnancyInputMode == 'weeks'
+                                  ? Colors.white
+                                  : AppTheme.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _pregnancyInputMode = 'date'),
+                      child: AnimatedContainer(
+                        duration: 300.ms,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: _pregnancyInputMode == 'date'
+                              ? AppTheme.accentPink
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Last Period (LMP)',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold,
+                              color: _pregnancyInputMode == 'date'
+                                  ? Colors.white
+                                  : AppTheme.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1),
+            
             const SizedBox(height: 32),
-            Text(
-              "OR SELECT CONCEPTION DATE",
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: AppTheme.textSecondary,
-                letterSpacing: 1,
-              ),
-            ),
-            const SizedBox(height: 16),
-            NeuContainer(
-              padding: const EdgeInsets.all(12),
-              radius: 24,
-              child: CalendarDatePicker(
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now().subtract(const Duration(days: 300)),
-                lastDate: DateTime.now(),
-                onDateChanged: (date) => setState(() => _conceptionDate = date),
-              ),
-            ),
+ 
+             AnimatedSwitcher(
+               duration: 400.ms,
+               transitionBuilder: (child, animation) => FadeTransition(
+                 opacity: animation,
+                 child: SlideTransition(
+                   position: Tween<Offset>(
+                     begin: const Offset(0.05, 0),
+                     end: Offset.zero,
+                   ).animate(animation),
+                   child: child,
+                 ),
+               ),
+               child: _pregnancyInputMode == 'weeks'
+                   ? _setupInput(
+                       "WEEKS PREGNANT",
+                       _weeksController,
+                       "e.g. 8",
+                       isNumeric: true,
+                       isRequired: true,
+                     )
+                   : Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       key: const ValueKey('date'),
+                       children: [
+                         Text(
+                           "SELECT LAST PERIOD (LMP) DATE",
+                           style: GoogleFonts.inter(
+                             fontSize: 12,
+                             fontWeight: FontWeight.w800,
+                             color: AppTheme.textSecondary,
+                             letterSpacing: 1,
+                           ),
+                         ),
+                         const SizedBox(height: 16),
+                         NeuContainer(
+                           padding: const EdgeInsets.all(12),
+                           radius: 24,
+                           child: CalendarDatePicker(
+                             initialDate: _conceptionDate ?? DateTime.now().subtract(const Duration(days: 30)),
+                             firstDate: DateTime.now().subtract(const Duration(days: 300)),
+                             lastDate: DateTime.now(),
+                             onDateChanged: (date) => setState(() => _conceptionDate = date),
+                           ),
+                         ),
+                       ],
+                     ),
+             ),
           ],
         ),
       );

@@ -14,6 +14,7 @@ import '../widgets/cycle_widgets.dart';
 import '../widgets/neu_container.dart';
 import '../widgets/delight_widgets.dart';
 import '../widgets/glass_container.dart';
+import '../widgets/pregnancy_dashboard.dart';
 import '../models/daily_log.dart';
 import 'log_period_screen.dart';
 
@@ -78,12 +79,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 12),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: hPad),
                       child: _buildTopRow(context, storage),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     Expanded(
                       child: RefreshIndicator(
                         color: AppTheme.accentPink,
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               _GreetingSection(storage: storage),
-                              const SizedBox(height: 24),
+                              const SizedBox(height: 12),
 
                               if (storage.userGoal == 'pregnant')
                                 _buildPregnancyDashboard(context, storage)
@@ -107,9 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               else
                                 _buildModernBentoDashboard(context, storage, pred),
 
-                              const SizedBox(height: 28),
+                              const SizedBox(height: 16),
                               _buildInsightCarousel(context),
-                              const SizedBox(height: 28),
+                              const SizedBox(height: 16),
                               _buildMedicalDisclaimer(),
                               const SizedBox(height: 88),
                             ],
@@ -195,12 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
           size: 250,
           color: Colors.white.withValues(alpha: 0.15),
         ),
-        const RepaintBoundary(
-          child: FloatingSparkles(
-            count: 15,
-            color: Colors.white,
-          ),
-        ),
+        // Removed FloatingSparkles for Web Stability
       ],
     );
   }
@@ -602,7 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 14),
           // Glass markers row
           Row(
-            children: List.generate(15, (i) {
+            children: List.generate(20, (i) {
               final filled = i < water;
               return Expanded(
                 child: Container(
@@ -620,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '$water / 15 glasses',
+            '$water / 20 glasses',
             style: GoogleFonts.poppins(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -636,11 +632,41 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildInsightCarousel(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final cardWidth = (screenWidth * 0.60).clamp(160.0, 220.0);
+    final pred = context.watch<PredictionService>();
+    final phase = pred.currentPhase.displayName;
 
-    final insights = [
-      {'title': 'Cycle Syncing', 'sub': 'Boost energy with yoga', 'icon': '🧘‍♀️'},
-      {'title': 'Nutrition Tip', 'sub': 'Drink more raspberry tea', 'icon': '🍵'},
-      {'title': 'Sleep Hygiene', 'sub': '8h sleep for balance', 'icon': '🌙'},
+    // Phase-aware insights
+    final Map<String, List<Map<String, String>>> phaseInsights = {
+      'Menstruation': [
+        {'title': 'Rest & Restore', 'sub': 'Light stretching eases cramps', 'icon': '🛌'},
+        {'title': 'Iron Foods', 'sub': 'Spinach & lentils replenish iron', 'icon': '🥬'},
+        {'title': 'Heat Therapy', 'sub': 'Warm compress relieves pain', 'icon': '🌡️'},
+        {'title': 'Magnesium', 'sub': 'Dark chocolate reduces cramping', 'icon': '🍫'},
+      ],
+      'Follicular': [
+        {'title': 'Energy Rising', 'sub': 'Great time for new workouts', 'icon': '⚡'},
+        {'title': 'Brain Power', 'sub': 'Estrogen boosts focus & memory', 'icon': '🧠'},
+        {'title': 'Protein Up', 'sub': 'Fuel your active phase', 'icon': '🥚'},
+        {'title': 'Social Time', 'sub': 'You\'re at your most outgoing', 'icon': '🌸'},
+      ],
+      'Ovulation': [
+        {'title': 'Peak Fertility', 'sub': 'Highest conception window now', 'icon': '🌟'},
+        {'title': 'High Energy', 'sub': 'HIIT and strength training ideal', 'icon': '💪'},
+        {'title': 'Zinc Rich', 'sub': 'Seeds & eggs support ovulation', 'icon': '🌻'},
+        {'title': 'Stay Hydrated', 'sub': 'Cervical fluid needs water', 'icon': '💧'},
+      ],
+      'Luteal': [
+        {'title': 'PMS Support', 'sub': 'B6 reduces mood swings', 'icon': '🌿'},
+        {'title': 'Slow Down', 'sub': 'Yoga & walking suit this phase', 'icon': '🧘‍♀️'},
+        {'title': 'Sleep First', 'sub': 'Progesterone disrupts sleep', 'icon': '🌙'},
+        {'title': 'Cravings OK', 'sub': 'Magnesium cuts chocolate cravings', 'icon': '🍵'},
+      ],
+    };
+
+    final insights = phaseInsights[phase] ?? [
+      {'title': 'Track Your Cycle', 'sub': 'Log a period to see insights', 'icon': '🌸'},
+      {'title': 'Stay Hydrated', 'sub': 'Drink 8 glasses daily', 'icon': '💧'},
+      {'title': 'Rest Well', 'sub': '8h sleep for hormonal balance', 'icon': '🌙'},
     ];
 
     return Column(
@@ -809,16 +835,16 @@ class _HomeScreenState extends State<HomeScreen> {
           date: now,
           waterIntake: 0,
         );
-    final newWater = ((log.waterIntake ?? 0) + 1).clamp(0, 15);
+    final newWater = ((log.waterIntake ?? 0) + 1).clamp(0, 20);
 
     // Check for celebration milestone
-    if (newWater == 15 && log.waterIntake != 15) {
+    if (newWater == 20 && log.waterIntake != 20) {
       _confettiController.play();
       if (mounted) {
         showGlassInfoPopup(
           context,
           title: 'Hydration Goal Met! 💧',
-          explanation: 'Amazing! You successfully reached 15 glasses of water today.',
+          explanation: 'Amazing! You successfully reached 20 glasses of water today.',
           tip: 'You are maintaining a great hydration streak. Your body thanks you!',
         );
       }
@@ -849,7 +875,7 @@ class _HomeScreenState extends State<HomeScreen> {
       date: log.date,
       moods: log.moods,
       symptoms: log.symptoms,
-      waterIntake: ((log.waterIntake ?? 0) - 1).clamp(0, 15),
+      waterIntake: ((log.waterIntake ?? 0) - 1).clamp(0, 20),
       notes: log.notes,
       flowIntensity: log.flowIntensity,
       physicalActivity: log.physicalActivity,
@@ -1230,150 +1256,7 @@ class TTCDashboard extends StatelessWidget {
   }
 }
 
-class PregnancyDashboard extends StatelessWidget {
-  final StorageService storage;
 
-  const PregnancyDashboard({super.key, required this.storage});
-
-  @override
-  Widget build(BuildContext context) {
-    final weeks = storage.pregnancyWeeks ?? 8;
-    final dueDate =
-        storage.dueDate ?? DateTime.now().add(const Duration(days: 220));
-    final daysRemaining = dueDate.difference(DateTime.now()).inDays;
-
-    String babySize = 'Raspberry';
-    if (weeks >= 12) babySize = 'Lime';
-    if (weeks >= 20) babySize = 'Banana';
-    if (weeks >= 40) babySize = 'Watermelon';
-
-    return Column(
-      children: [
-        NeuContainer(
-          padding: const EdgeInsets.all(28),
-          radius: 32,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Pregnancy Progress',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Week $weeks',
-                    style: GoogleFonts.poppins(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                      color: AppTheme.textDark,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.pregnant_woman_rounded,
-                    color: AppTheme.accentPink,
-                    size: 40,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ).animate().fadeIn(),
-        const SizedBox(height: 24),
-        NeuContainer(
-          padding: const EdgeInsets.all(28),
-          radius: 32,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Baby Size',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: AppTheme.textSecondary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'About the size of a $babySize',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: AppTheme.textDark,
-                ),
-              ),
-            ],
-          ),
-        ).animate().fadeIn(delay: 200.ms),
-        const SizedBox(height: 24),
-        NeuContainer(
-          padding: const EdgeInsets.all(28),
-          radius: 32,
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Weeks',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$weeks',
-                      style: GoogleFonts.poppins(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textDark,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Days Left',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: AppTheme.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$daysRemaining',
-                      style: GoogleFonts.poppins(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        color: AppTheme.textDark,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ).animate().fadeIn(delay: 200.ms),
-      ],
-    );
-  }
-}
 
 class _CycleRingPainter extends CustomPainter {
   final double progress;

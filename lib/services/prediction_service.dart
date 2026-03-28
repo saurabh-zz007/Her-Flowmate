@@ -31,7 +31,14 @@ class PredictionService {
 
   DateTime? get currentPeriodStart {
     final logs = storageService.getLogs();
-    return logs.isEmpty ? null : logs.first.startDate;
+    if (logs.isEmpty) return null;
+    // Find the most recent period whose start is on or before today
+    final today = DateTime.now();
+    for (final log in logs) {
+      if (!log.startDate.isAfter(today)) return log.startDate;
+    }
+    // All logs are in the future — shouldn't happen, but fall back gracefully
+    return logs.last.startDate;
   }
 
   DateTime? get nextPeriodDate {
@@ -74,7 +81,7 @@ class PredictionService {
             averageCycleLength,
           ) ==
           CyclePhase.ovulation ||
-      getConceptionChance(date) > 10;
+      getConceptionChance(date) >= 10;
 
   bool isPeriodDay(DateTime date) {
     final logs = storageService.getLogs();
@@ -141,16 +148,25 @@ class PredictionService {
 
     final avgLen = averageCycleLength;
     final ovulationDay = avgLen - 14;
+    final start = currentPeriodStart;
+    if (start == null) return -1;
 
-    final ovDate = logs.first.startDate.add(Duration(days: ovulationDay));
+    final ovDate = start.add(Duration(days: ovulationDay));
     final today = DateTime.now();
     final normToday = DateTime(today.year, today.month, today.day);
     final normOv = DateTime(ovDate.year, ovDate.month, ovDate.day);
 
-    int diff = normOv.difference(normToday).inDays;
+    final diff = normOv.difference(normToday).inDays;
 
-    // If ovulation already passed this cycle, look at next cycle
-    return diff < 0 ? diff + avgLen : diff;
+    // Ovulation already passed this cycle — show days until next cycle's ovulation
+    // but only if we haven't already moved into a new cycle start
+    if (diff < 0) {
+      final daysIntoCycle = currentCycleDay;
+      // If we're early in a new cycle the next ovulation is simply ovulationDay - daysIntoCycle
+      final daysToNextOv = ovulationDay - daysIntoCycle;
+      return daysToNextOv < 0 ? (daysToNextOv + avgLen) : daysToNextOv;
+    }
+    return diff;
   }
 
   // ── Hormone Logic ─────────────────────────────────────────────────────────
@@ -203,16 +219,16 @@ class PredictionService {
     };
 
     final dailyContext = {
-      'Estrogen': highestVal > 0.8
+      'Estrogen': (levels['Estrogen'] ?? 0) > 0.8
           ? 'Peaking now to boost your energy and mood.'
           : 'Lower today, may lead to quieter energy.',
-      'Progesterone': highestVal > 0.8
+      'Progesterone': (levels['Progesterone'] ?? 0) > 0.8
           ? 'Peaking to support the uterine lining.'
           : 'Remaining low as your cycle prepares to reset.',
-      'LH': highestVal > 0.8
+      'LH': (levels['LH'] ?? 0) > 0.7
           ? 'Surging now to trigger ovulation within 24-48h.'
           : 'Stable levels while follicles develop.',
-      'FSH': highestVal > 0.5
+      'FSH': (levels['FSH'] ?? 0) > 0.4
           ? 'Active now to mature your eggs for the month.'
           : 'Resting after its early cycle work is done.',
     };
