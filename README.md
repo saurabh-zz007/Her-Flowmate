@@ -10,18 +10,35 @@ HerFlowmate is a minimalist, privacy-first health tracker designed to empower wo
 
 ---
 
-## ✨ Feature Spotlight
+---
 
-### 🧠 Cycle Evolution & Insights
-- **🔄 Interactive Evolution Wheel**: A beautiful, floral-inspired visualization of your current biological phase and fertility window.
-- **🧪 Magazine-style Insights**: High-density daily updates on your **Hormones**, **Energy**, and **Mood**, tailored to your exact cycle day.
-- **💧 Advanced Hydration**: Smart tracking with a daily **15 Glass target** and intuitive, fractional progress logging.
-- **📝 Holistic Logging**: Seamlessly track symptoms, moods, and energy levels to discover your unique health patterns.
+---
 
-### 🤰 Pregnancy Dashboard (Premium)
-- **🏔️ Milestone Hero**: An immersive, trimester-aware header that tracks your progress with high-impact typography and glowing progress markers.
-- **🍐 Baby Development**: Visualize your baby's growth with recognizable fruit/veg comparisons and precise weight/length data.
-- **🏥 Trimester Logic**: The UI automatically shifts its theme (Rose Quartz ➡️ Lavender ➡️ Baby Blue) as you progress through each trimester.
+## 🌸 The 3-Phase Journey
+
+HerFlowmate is designed to grow with you, adapting its entire experience to whatever life stage you're in.
+
+### 🍃 Phase I: Period Tracking
+*Focus: Understanding Your Body & Health*
+- **🔄 The Evolution Wheel**: A beautiful, floral map of your cycle. See at a glance where you are and when your next period is coming.
+- **✨ Daily Insights**: Understand how your hormones affect your **Energy** and **Mood** every day, so you can plan your life with confidence.
+- **📝 Simple Health Check**: Quickly log how you're feeling, from symptoms to water intake, to discover your own unique health patterns.
+- **🩺 Smart Awareness**: The app gently alerts you if your cycle varies, helping you stay informed about your internal health.
+
+### 💖 Phase II: Conceive
+*Focus: Finding the Right Time*
+- **🎯 Fertility Windows**: Clear, simple predictions of your most fertile days, helping you understand the best time to try for a baby.
+- **📈 Understanding Your Chances**: Real-time updates on your conception chances, presented in simple percentages that anyone can understand.
+- **⚡ Ovulation Surges**: Easy-to-read markers that highlight your peak moments during the month.
+
+### 🤰 Phase III: Pregnancy
+*Focus: Watching Your Baby Grow*
+- **🏔️ Milestone Tracking**: A beautiful, glowing progress bar that guides you through every day of your 9-month journey.
+- **🍐 Baby Growth**: See how your baby is developing with fun fruit and vegetable size comparisons (like Week 12: Lemon!).
+- **🏥 Precise Dating**: We handle the complex math of trimesters and weeks for you, ensuring your due date is always accurate.
+- **🌈 Adaptive Design**: The entire app's colors gently shift to match your trimester, creating a calm, supportive space for you.
+
+![Baby Development](file:///home/jyoti/.gemini/antigravity/brain/fd281d84-634b-491b-aae8-4b07d02a9c50/baby_week12_lemon_1774668133157.png)
 
 ---
 
