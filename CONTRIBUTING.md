@@ -30,5 +30,9 @@ Before submitting a Pull Request, please ensure:
 - Create descriptive feature branches: `feature/new-milestone` or `fix/calc-offset`.
 - Target the `main` branch with your Pull Request.
 
+## 💬 Community & Support
+Join our official community channel to discuss features, get help, or just connect with other contributors:
+- **Discord**: [Join Her-Flowmate Community](https://discord.gg/aehkEXj8q)
+
 ---
 Thank you for helping us empower women's health! 🌸

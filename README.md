@@ -23,6 +23,10 @@ To achieve the smallest app size and best performance in production:
 2. Run `flutter pub get`.
 3. Run `flutter run -d chrome`.
 
+## 💬 Community
+Stay connected and join our journey:
+- **Discord**: [Join the Community](https://discord.gg/aehkEXj8q)
+
 ## 🤝 Contributing
 Contributions are welcome! We follow a **Fragment-First** architecture for stability. Please ensure:
 1. All dashboard components are built as `StatelessWidget` fragments.

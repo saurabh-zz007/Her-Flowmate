@@ -12,7 +12,6 @@ import '../utils/app_theme.dart';
 import '../widgets/info_widgets.dart';
 import '../widgets/cycle_widgets.dart';
 import '../widgets/neu_container.dart';
-import '../widgets/delight_widgets.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/pregnancy_dashboard.dart';
 import '../models/daily_log.dart';
@@ -426,92 +425,164 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        _buildFloralRingDashboard(context, pred),
-        const SizedBox(height: 20),
-        _buildYourBodyTodayCard(context, pred),
-        const SizedBox(height: 16),
-        _buildBentoWaterCard(storage),
-        const SizedBox(height: 20),
-        HormoneGraph(pred: pred),
+        _buildFloralRingDashboard(context, pred)
+            .animate()
+            .fadeIn(duration: 400.ms)
+            .scale(begin: const Offset(0.9, 0.9)),
         const SizedBox(height: 24),
-        PhaseHealthTipsWidget(pred: pred),
+        _buildYourBodyTodayCard(context, pred)
+            .animate()
+            .fadeIn(delay: 200.ms, duration: 400.ms)
+            .slideY(begin: 0.1),
+        const SizedBox(height: 16),
+        _buildBentoWaterCard(storage)
+            .animate()
+            .fadeIn(delay: 400.ms, duration: 400.ms)
+            .slideY(begin: 0.1),
+        const SizedBox(height: 20),
+        HormoneGraph(pred: pred)
+            .animate()
+            .fadeIn(delay: 600.ms, duration: 400.ms)
+            .slideY(begin: 0.1),
+        const SizedBox(height: 24),
+        PhaseHealthTipsWidget(pred: pred)
+            .animate()
+            .fadeIn(delay: 800.ms, duration: 400.ms)
+            .slideY(begin: 0.1),
       ],
     );
   }
 
-  /// Your Body Today card
+  /// Your Body Today - Magazine Style Insight Card
   Widget _buildYourBodyTodayCard(BuildContext context, PredictionService pred) {
     final phaseName = pred.phaseDisplayName;
     final day = pred.currentCycleDay == 0 ? 1 : pred.currentCycleDay;
     final biology = pred.getPhaseBiology(day);
+    final phaseColor = AppTheme.getPhaseColor(pred.currentPhase);
 
-    return NeuContainer(
+    return Container(
       padding: const EdgeInsets.all(24),
-      radius: 20,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                Icons.auto_awesome_rounded,
-                color: AppTheme.accentPurple,
-                size: 20,
+              Row(
+                children: [
+                  const Icon(Icons.auto_awesome_rounded,
+                      color: AppTheme.accentPurple, size: 18),
+                  const SizedBox(width: 8),
+                  Text(
+                    'YOUR BODY TODAY',
+                    style: GoogleFonts.inter(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.textSecondary,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              Text(
-                'YOUR BODY TODAY',
-                style: GoogleFonts.inter(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w900,
-                  color: AppTheme.textSecondary,
-                  letterSpacing: 1.2,
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: phaseColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  phaseName.toUpperCase(),
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: phaseColor,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            'You are in the $phaseName Phase.',
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: AppTheme.textDark,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
+          const SizedBox(height: 24),
+          _insightRow(
+            '🧪',
+            'HORMONES',
             biology['hormoneActivity'] ?? '',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textSecondary,
-              height: 1.5,
-            ),
+            AppTheme.accentPurple,
           ),
-          const SizedBox(height: 4),
-          Text(
+          const Divider(height: 32, thickness: 0.5),
+          _insightRow(
+            '⚡',
+            'ENERGY',
             biology['energy'] ?? '',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textSecondary,
-              height: 1.5,
-            ),
+            Colors.orangeAccent,
           ),
-          const SizedBox(height: 4),
-          Text(
+          const Divider(height: 32, thickness: 0.5),
+          _insightRow(
+            '🧘',
+            'MOOD',
             biology['mood'] ?? '',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textSecondary,
-              height: 1.5,
-            ),
+            AppTheme.accentPink,
           ),
         ],
       ),
-    ).animate().fadeIn(delay: 100.ms);
+    );
+  }
+
+  Widget _insightRow(String icon, String label, String text, Color color) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(icon, style: const TextStyle(fontSize: 16)),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.inter(
+                  fontSize: 9,
+                  fontWeight: FontWeight.w900,
+                  color: color,
+                  letterSpacing: 1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                text,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.textDark,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildBentoWaterCard(StorageService storage) {

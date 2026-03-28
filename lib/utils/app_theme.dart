@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/cycle_engine.dart';
 
 abstract final class AppTheme {
   // ── Premium Color Palette (Rose Quartz & Midnight Pearl) ───────────────────
@@ -66,6 +67,21 @@ abstract final class AppTheme {
   static const Color softPink = softRose;
 
   static Color phaseColor(String phase) => phaseColors[phase] ?? roseGold;
+
+  static Color getPhaseColor(CyclePhase phase) {
+    switch (phase) {
+      case CyclePhase.menstrual:
+        return phaseColors['Menstrual']!;
+      case CyclePhase.follicular:
+        return phaseColors['Follicular']!;
+      case CyclePhase.ovulation:
+        return phaseColors['Ovulation']!;
+      case CyclePhase.luteal:
+        return phaseColors['Luteal']!;
+      case CyclePhase.unknown:
+        return roseGold;
+    }
+  }
 
   // ── Spacing System (8px Grid) ─────────────────────────────────────────────
   static const double gridUnit = 8.0;
