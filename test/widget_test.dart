@@ -42,6 +42,9 @@ void main() {
         child: const MaterialApp(home: LoginScreen()),
       ),
     );
+    
+    // Fast-forward to clear flutter_animate entry delays (e.g. 400ms fade-ins)
+    await tester.pump(const Duration(seconds: 1));
 
     // Verify initial render state texts
     expect(find.text('Her '), findsOneWidget);
