@@ -33,9 +33,6 @@ HerFlowmate is designed to grow with you, adapting its entire experience to what
 - **🍐 Baby Growth**: See how your baby is developing with fun fruit and vegetable size comparisons (like Week 12: Lemon!).
 - **🏥 Precise Dating**: We handle the complex math of trimesters and weeks for you, ensuring your due date is always accurate.
 - **🌈 Adaptive Design**: The entire app's colors gently shift to match your trimester, creating a calm, supportive space for you.
-
-![Baby Development](file:///home/jyoti/.gemini/antigravity/brain/fd281d84-634b-491b-aae8-4b07d02a9c50/baby_week12_lemon_1774668133157.png)
-
 ---
 
 ## 🏗️ Technical & Clinical Core
