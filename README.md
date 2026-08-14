@@ -1,10 +1,12 @@
 # HerFlowmate 🌸
 **Your gentle, premium cycle and pregnancy companion built with Flutter.**
 
-[![Flutter Build](https://img.shields.io/badge/Flutter-v3.29.0-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Deployment](https://img.shields.io/badge/Live-Web%20Demo-ff69b4)](https://hillhack.github.io/Her-Flowmate/)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289DA?logo=discord&logoColor=white)](https://discord.gg/aehkEXj8q)
+<div style="display: flex; flex-direction: row; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; margin: 12px 0;">
+  <img width="220" height="auto" alt="HerFlowmate screenshot 1" src="https://github.com/user-attachments/assets/d122f295-d4db-4c4e-a20b-94416e35c07b" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" />
+  <img width="220" height="auto" alt="HerFlowmate screenshot 2" src="https://github.com/user-attachments/assets/857ef6a3-8e68-449d-9b0b-049d14ac6f0f" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" />
+  <img width="220" height="auto" alt="HerFlowmate screenshot 3" src="https://github.com/user-attachments/assets/626306bd-e702-46b7-b8f2-0d9d6d6237d9" style="border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);" />
+</div>
+
 
 HerFlowmate is a minimalist, privacy-first health tracker designed to empower women with deep biological insights, clinical-grade pregnancy tracking, and calm, premium aesthetics.
 
