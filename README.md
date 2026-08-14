@@ -35,9 +35,6 @@ HerFlowmate is designed to grow with you, adapting its entire experience to what
 - **🌈 Adaptive Design**: The entire app's colors gently shift to match your trimester, creating a calm, supportive space for you.
 
 ![Baby Development](file:///home/jyoti/.gemini/antigravity/brain/fd281d84-634b-491b-aae8-4b07d02a9c50/baby_week12_lemon_1774668133157.png)
-<img width="779" height="1600" alt="image" src="https://github.com/user-attachments/assets/d122f295-d4db-4c4e-a20b-94416e35c07b" /><img width="779" height="1600" alt="image" src="https://github.com/user-attachments/assets/857ef6a3-8e68-449d-9b0b-049d14ac6f0f" /><img width="779" height="1600" alt="image" src="https://github.com/user-attachments/assets/626306bd-e702-46b7-b8f2-0d9d6d6237d9" />
-
-
 
 ---
 
