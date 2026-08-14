@@ -10,12 +10,6 @@
 
 HerFlowmate is a minimalist, privacy-first health tracker designed to empower women with deep biological insights, clinical-grade pregnancy tracking, and calm, premium aesthetics.
 
----
-
----
-
----
-
 ## 🌸 The 3-Phase Journey
 
 HerFlowmate is designed to grow with you, adapting its entire experience to whatever life stage you're in.
